@@ -1,17 +1,18 @@
 /*
- * Graph.h
+ * Vehicle.h
  */
-#ifndef GRAPH_H_
-#define GRAPH_H_
+#ifndef VEHICLE_H_
+#define VEHICLE_H_
 
 class Vehicle {
 	unsigned int capacity;
 public:
-	unsigned int getCapacity() {
+	unsigned int getCapacity(){
 		return capacity;
 	}
-	Vehicle(int capacity){
-		this.capacity=capacity;
+	Vehicle(unsigned int capacity) {
+		this->capacity = capacity;
 	}
 };
+
 #endif

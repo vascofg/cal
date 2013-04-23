@@ -9,6 +9,9 @@
 #include <list>
 #include <limits>
 #include <cmath>
+#include "ide_listener.h"
+#include <sstream>
+
 using namespace std;
 
 template <class T> class Edge;
@@ -48,6 +51,10 @@ public:
 
 	bool operator<(const Vertex<T> vertex);
 
+	vector<Edge<T>  > getAdj();
+
+
+
 	Vertex* path;
 };
 
@@ -75,7 +82,7 @@ bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
 	return false;
 }
 
-//atualizado pelo exercício 5
+//atualizado pelo exercï¿½cio 5
 template <class T>
 Vertex<T>::Vertex(T in): info(in), visited(false), processing(false), indegree(0), dist(0) {
 	path = NULL;
@@ -110,6 +117,11 @@ int Vertex<T>::getIndegree() const {
 	return this->indegree;
 }
 
+template <class T>
+vector<Edge<T>  > Vertex<T>::getAdj(){
+	return this->adj;
+}
+
 
 
 
@@ -125,11 +137,22 @@ public:
 	Edge(Vertex<T> *d, double w);
 	friend class Graph<T>;
 	friend class Vertex<T>;
+	Vertex<T> * getDest();
+	double getWeight();
 };
 
 template <class T>
 Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w){}
 
+template <class T>
+Vertex<T> * Edge<T>::getDest(){
+	return this->dest;
+}
+
+template <class T>
+double Edge<T>::getWeight(){
+	return this->weight;
+}
 
 
 
@@ -437,7 +460,7 @@ vector<T> Graph<T>::topologicalOrder() {
 	//vetor com o resultado da ordenacao
 	vector<T> res;
 
-	//verificar se é um DAG
+	//verificar se ï¿½ um DAG
 	if( getNumCycles() > 0 ) {
 		cout << "Ordenacao Impossivel!" << endl;
 		return res;
@@ -652,7 +675,7 @@ void Graph<T>::dijkstraShortestPath(const T &s) {
 				w->dist = v->dist + v->adj[i].weight;
 				w->path = v;
 
-				//se já estiver na lista, apenas a actualiza
+				//se jï¿½ estiver na lista, apenas a actualiza
 				if(!w->processing)
 				{
 					w->processing = true;
@@ -680,35 +703,6 @@ int Graph<T>::edgeCost(int vOrigIndex, int vDestIndex)
 	return INT_INFINITY;
 }
 
-
-void printSquareArray(int ** arr, unsigned int size)
-{
-	for(unsigned int k = 0; k < size; k++)
-	{
-		if(k == 0)
-		{
-			cout <<  "   ";
-			for(unsigned int i = 0; i < size; i++)
-				cout <<  " " << i+1 << " ";
-			cout << endl;
-		}
-
-		for(unsigned int i = 0; i < size; i++)
-		{
-			if(i == 0)
-				cout <<  " " << k+1 << " ";
-
-			if(arr[k][i] == INT_INFINITY)
-				cout << " - ";
-			else
-				cout <<  " " << arr[k][i] << " ";
-		}
-
-		cout << endl;
-	}
-}
-
-
 template<class T>
 void Graph<T>::floydWarshallShortestPath() {
 
@@ -730,7 +724,7 @@ void Graph<T>::floydWarshallShortestPath() {
 		for(unsigned int i = 0; i < vertexSet.size(); i++)
 			for(unsigned int j = 0; j < vertexSet.size(); j++)
 			{
-				//se somarmos qualquer coisa ao valor INT_INFINITY, ocorre overflow, o que resulta num valor negativo, logo nem convém considerar essa soma
+				//se somarmos qualquer coisa ao valor INT_INFINITY, ocorre overflow, o que resulta num valor negativo, logo nem convï¿½m considerar essa soma
 				if(W[i][k] == INT_INFINITY || W[k][j] == INT_INFINITY)
 					continue;
 
