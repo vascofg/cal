@@ -43,6 +43,12 @@ void shortestPath(GraphViewer* gv, Graph<int>* graph) {
 	cout << "Segundo nó:";
 	cin >> destination;
 	cin.ignore(INT_MAX, '\n');
+	if(graph->getVertex(source)==NULL || graph->getVertex(destination)==NULL)
+	{
+		cout << "Nodes não existem" << endl << "Press enter to continue...";
+		cin.get();
+		return;
+	}
 	gv->setVertexColor(source, "green");
 	gv->setVertexColor(destination, "red");
 	gv->rearrange();
@@ -54,18 +60,24 @@ void shortestPath(GraphViewer* gv, Graph<int>* graph) {
 	Vertex<int>* path;
 	vector<int> visited_edges;
 	Edge<int>* pathedge;
+	bool found = true;
+	int sum = 0;
 	do {
 		path = graph->getVertex(current)->path;
 		pathedge = graph->getVertex(current)->pathedge;
 		if (path == NULL) {
 			cout << " Caminho não encontrado";
+			found=false;
 			break;
 		}
 		current = path->getInfo();
 		cout << "<" << current;
 		gv->setEdgeColor(pathedge->getId(), "red");
+		sum+=pathedge->getWeight();
 		visited_edges.push_back(pathedge->getId());
 	} while (current != source);
+	if(found)
+		cout << endl << "Distância a percorrer: " << sum << endl;
 	cout << endl << "Press enter to continue...";
 	cin.get();
 	gv->setVertexColor(source, DEFAULT_VERTEX_COLOR);
