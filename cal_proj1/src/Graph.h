@@ -10,6 +10,7 @@
 #include <limits>
 #include <cmath>
 #include "ide_listener.h"
+#include "Vehicle.h"
 #include <sstream>
 
 using namespace std;
@@ -35,12 +36,13 @@ class Vertex {
 	bool processing;
 	int indegree;
 	double dist;
+	vector<Vehicle> vehicles;
 public:
 
 	Vertex(T in);
 	friend class Graph<T>;
 
-	void addEdge(Vertex<T> *dest, double w);
+	void addEdge(Vertex<T> *dest, double w, int id);
 	bool removeEdgeTo(Vertex<T> *d);
 
 	T getInfo() const;
@@ -53,9 +55,12 @@ public:
 
 	vector<Edge<T>  > getAdj();
 
+	vector<Vehicle> getVehicles();
 
+	void addVehicle(Vehicle v);
 
 	Vertex* path;
+	Edge<T>* pathedge;
 };
 
 
@@ -65,7 +70,6 @@ struct vertex_greater_than {
         return a->getDist() > b->getDist();
     }
 };
-
 
 template <class T>
 bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
@@ -90,8 +94,8 @@ Vertex<T>::Vertex(T in): info(in), visited(false), processing(false), indegree(0
 
 
 template <class T>
-void Vertex<T>::addEdge(Vertex<T> *dest, double w) {
-	Edge<T> edgeD(dest,w);
+void Vertex<T>::addEdge(Vertex<T> *dest, double w, int id) {
+	Edge<T> edgeD(dest,w, id);
 	adj.push_back(edgeD);
 }
 
@@ -131,18 +135,26 @@ vector<Edge<T>  > Vertex<T>::getAdj(){
  */
 template <class T>
 class Edge {
+	int id;
 	Vertex<T> * dest;
 	double weight;
 public:
-	Edge(Vertex<T> *d, double w);
+	Edge(Vertex<T> *d, double w, int id);
 	friend class Graph<T>;
 	friend class Vertex<T>;
 	Vertex<T> * getDest();
 	double getWeight();
+	int getId();
 };
 
 template <class T>
-Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w){}
+Edge<T>::Edge(Vertex<T> *d, double w, int num): dest(d), weight(w), id(num){}
+
+template <class T>
+int Edge<T>::getId()
+{
+	return this->id;
+}
 
 template <class T>
 Vertex<T> * Edge<T>::getDest(){
@@ -155,6 +167,15 @@ double Edge<T>::getWeight(){
 }
 
 
+template <class T>
+void Vertex<T>::addVehicle(Vehicle v){
+	this->vehicles.push_back(v);
+}
+
+template <class T>
+vector<Vehicle> Vertex<T>::getVehicles(){
+	return this->vehicles;
+}
 
 
 /* ================================================================================================
@@ -204,6 +225,8 @@ public:
 	int edgeCost(int vOrigIndex, int vDestIndex);
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest);
 	void getfloydWarshallPathAux(int index1, int index2, vector<T> & res);
+
+	int numEdge; //unique num edge identifier, to identify edges on graphviewer
 };
 
 
@@ -280,7 +303,7 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
 	}
 	if (found!=2) return false;
 	vD->indegree++;
-	vS->addEdge(vD,w);
+	vS->addEdge(vD,w, ++numEdge);
 
 	return true;
 }
@@ -674,6 +697,7 @@ void Graph<T>::dijkstraShortestPath(const T &s) {
 
 				w->dist = v->dist + v->adj[i].weight;
 				w->path = v;
+				w->pathedge = &v->adj[i];
 
 				//se j� estiver na lista, apenas a actualiza
 				if(!w->processing)

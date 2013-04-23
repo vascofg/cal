@@ -1,6 +1,9 @@
 ﻿#ifndef _GRAPH_VIEWER_H_
 #define _GRAPH_VIEWER_H_
 
+#define DEFAULT_EDGE_COLOR "black"
+#define DEFAULT_VERTEX_COLOR "blue"
+
 #ifdef linux
 	#include <unistd.h>
 #else
@@ -61,7 +64,7 @@ class GraphViewer {
    */
   GraphViewer(int width, int height, bool dynamic, int port_n);
   
-  GraphViewer(int width, int height, bool dynamic, Graph<int> graph);
+  void GraphViewer::importGraph(Graph<int> graph);
 
   /**
    * Função que cria a janela para visualização.

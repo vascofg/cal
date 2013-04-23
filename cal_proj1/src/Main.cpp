@@ -4,12 +4,10 @@
 
 using namespace std;
 
-Graph<int> CreateTestGraph()
-{
+Graph<int> CreateTestGraph() {
 	Graph<int> myGraph;
 
-	for(int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		myGraph.addVertex(i);
 	}
 
@@ -30,34 +28,92 @@ Graph<int> CreateTestGraph()
 	return myGraph;
 }
 
-int main()
-{
-	Graph<int> test = CreateTestGraph();
-	GraphViewer *gv = new GraphViewer(600, 600, true, test);
-	return 0;
+GraphViewer* prepareGraphViewer(Graph<int>* graph) {
+	GraphViewer *gv = new GraphViewer(600, 600, true);
+	gv->createWindow(600, 600);
+	gv->importGraph(*graph);
+	gv->rearrange();
+	return gv;
 }
 
-void printSquareArray(int ** arr, unsigned int size)
-{
-	for(unsigned int k = 0; k < size; k++)
-	{
-		if(k == 0)
-		{
-			cout <<  "   ";
-			for(unsigned int i = 0; i < size; i++)
-				cout <<  " " << i+1 << " ";
+void shortestPath(GraphViewer* gv, Graph<int>* graph) {
+	int source, destination, current;
+	cout << "Primeiro nó:";
+	cin >> source;
+	cout << "Segundo nó:";
+	cin >> destination;
+	cin.ignore(INT_MAX, '\n');
+	gv->setVertexColor(source, "green");
+	gv->setVertexColor(destination, "red");
+	gv->rearrange();
+	graph->dijkstraShortestPath(source);
+
+	//first iteration
+	current = destination;
+	cout << current;
+	Vertex<int>* path;
+	vector<int> visited_edges;
+	Edge<int>* pathedge;
+	do {
+		path = graph->getVertex(current)->path;
+		pathedge = graph->getVertex(current)->pathedge;
+		if (path == NULL) {
+			cout << " Caminho não encontrado";
+			break;
+		}
+		current = path->getInfo();
+		cout << "<" << current;
+		gv->setEdgeColor(pathedge->getId(), "red");
+		visited_edges.push_back(pathedge->getId());
+	} while (current != source);
+	cout << endl << "Press enter to continue...";
+	cin.get();
+	gv->setVertexColor(source, DEFAULT_VERTEX_COLOR);
+	gv->setVertexColor(destination, DEFAULT_VERTEX_COLOR);
+	for (int i = 0; i < visited_edges.size(); i++)
+		gv->setEdgeColor(visited_edges[i], DEFAULT_EDGE_COLOR);
+	gv->rearrange();
+}
+
+int main() {
+	Graph<int> test = CreateTestGraph();
+	GraphViewer *gv = prepareGraphViewer(&test);
+	int opt;
+	while (true) {
+		cout
+				<< "Sistema de evacuação\n1-Abrir nova janela\n2-Caminho mais curto\n0-Sair\nOpção:";
+		cin >> opt;
+		switch (opt) {
+		case 1:
+			gv = prepareGraphViewer(&test);
+			break;
+		case 2: {
+			shortestPath(gv, &test);
+			break;
+		}
+		case 0:
+			return 0;
+		}
+	}
+}
+
+void printSquareArray(int ** arr, unsigned int size) {
+	for (unsigned int k = 0; k < size; k++) {
+		if (k == 0) {
+			cout << "   ";
+			for (unsigned int i = 0; i < size; i++)
+				cout << " " << i + 1 << " ";
 			cout << endl;
 		}
 
-		for(unsigned int i = 0; i < size; i++)
-		{
-			if(i == 0)
-				cout <<  " " << k+1 << " ";
+		for (unsigned int i = 0; i < size; i++) {
+			if (i == 0)
+				cout << " " << k + 1 << " ";
 
-			if(arr[k][i] == INT_INFINITY)
+			if (arr[k][i] == INT_INFINITY)
 				cout << " - ";
 			else
-				cout <<  " " << arr[k][i] << " ";
+				cout << " " << arr[k][i] << " ";
 		}
 
 		cout << endl;
