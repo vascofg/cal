@@ -47,235 +47,169 @@ GraphViewer* prepareGraphViewer(Graph<int>* graph) {
 	return gv;
 }
 
-void shortestPath(GraphViewer* gv, Graph<int>* graph) {
-	int source, destination, current;
-	cout << "Primeiro nó:";
-	cin >> source;
-	cout << "Segundo nó:";
-	cin >> destination;
-	cin.ignore(INT_MAX, '\n');
-	if (graph->getVertex(source) == NULL
-			|| graph->getVertex(destination) == NULL) {
-		cout << "Nodes não existem" << endl << "Press enter to continue...";
-		cin.get();
-		return;
-	}
-	gv->setVertexColor(source, "green");
-	gv->setVertexColor(destination, "red");
-	gv->rearrange();
-	graph->dijkstraShortestPath(source);
+bool shortestPath(GraphViewer* gv, Graph<int>* graph, Vertex<int> **source,
+		Vertex<int> **dest, vector<int> *visited_edges, string edge_color,
+		int *dist = new int(), bool verbose = true) {
+	bool found = true;
+	*dist = 0;
+	Vertex<int> *current, *path;
+	Edge<int>* pathedge;
+	graph->dijkstraShortestPath((*source)->getInfo());
 
 	//first iteration
-	current = destination;
-	cout << current;
-	Vertex<int>* path;
-	vector<int> visited_edges;
-	Edge<int>* pathedge;
-	bool found = true;
-	int sum = 0;
+	current = *dest;
+	if (verbose)
+		cout << current->getInfo();
 	do {
-		path = graph->getVertex(current)->path;
-		pathedge = graph->getVertex(current)->pathedge;
+		path = current->path;
+		pathedge = current->pathedge;
 		if (path == NULL) {
-			cout << " Caminho não encontrado";
+			if (verbose)
+				cout << endl << "Caminho não encontrado" << endl;
 			found = false;
 			break;
 		}
-		current = path->getInfo();
-		cout << "<" << current;
-		gv->setEdgeColor(pathedge->getId(), "red");
-		sum += pathedge->getWeight();
-		visited_edges.push_back(pathedge->getId());
-	} while (current != source);
-	if (found)
-		cout << endl << "Distância a percorrer: " << sum << endl;
-	cout << endl << "Press enter to continue...";
-	cin.get();
-	gv->setVertexColor(source, DEFAULT_VERTEX_COLOR);
-	gv->setVertexColor(destination, DEFAULT_VERTEX_COLOR);
-	for (int i = 0; i < visited_edges.size(); i++)
-		gv->setEdgeColor(visited_edges[i], DEFAULT_EDGE_COLOR);
-	gv->rearrange();
+		current = path;
+		if (verbose)
+			cout << "<" << current->getInfo();
+		if (gv != NULL)
+			gv->setEdgeColor(pathedge->getId(), edge_color);
+		*dist += pathedge->getWeight();
+		if (visited_edges != NULL)
+			visited_edges->push_back(pathedge->getId());
+	} while (current != *source);
+	if (found) {
+		if (gv != NULL)
+			gv->rearrange();
+		if (verbose)
+			cout << endl << "Distância a percorrer: " << *dist << endl;
+	}
+	return found;
+}
+
+//for use in getClosestVehicle
+bool shortestPath(Graph<int>* graph, Vertex<int> **source, Vertex<int> **dest,
+		int *dist) {
+	return shortestPath(NULL, graph, &(*source), &(*dest), NULL,
+			DEFAULT_EDGE_COLOR, &(*dist), false);
 }
 
 int getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
-		Vertex<int>* p) {
-	int source, destination, current, minsum = INT_MAX, minvertex = 0;
+		Vertex<int>* p, Vertex<int>* s = NULL) {
+	int sum, minsum = INT_MAX;
+	Vertex<int> *current, *minvertex = NULL, *path;
+	Edge<int>* pathedge;
 
-	destination = p->getInfo();
-	for (int i = 0; i < v.size(); i++) {
-		current = destination;
-		source = v[i]->getInfo();
-		Vertex<int>* path;
-		vector<int> visited_edges;
-		Edge<int>* pathedge;
-		bool found = true;
-		int sum = 0;
-		graph->dijkstraShortestPath(source);
-		do { //para as pessoas
-
-			path = graph->getVertex(current)->path;
-			pathedge = graph->getVertex(current)->pathedge;
-			if (path == NULL) {
-				found = false;
-				break;
-			}
-			current = path->getInfo();
-			sum += pathedge->getWeight();
-			visited_edges.push_back(pathedge->getId());
-
-		} while (current != source);
-		if (found) {
+	for (int i = 0; i < v.size(); i++) { //for each vertex (with vehicles), get shortest path to people
+		sum = 0;
+		if (shortestPath(graph, &v[i], &p, &sum)) {
 			//cout << endl << "Distância a percorrer: " << sum << endl;
-			if (sum < minsum) {
+			if (sum < minsum && v[i] != s) {
 				minsum = sum;
-				minvertex = source;
+				minvertex = v[i];
 			}
-		} else
-			continue;
+		}
 	}
-	return minvertex;
+	if (minvertex != NULL)
+		return minvertex->getInfo();
+	else
+		return 0;
+}
+
+bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
+		vector<Vertex<int> *>* vs) {
+	Vertex<int>* current;
+	for (int i = 0; i < graph->getNumVertex(); i++) {
+		current = graph->getVertexSet()[i];
+		if (current->getPeople() > 0)
+			*p = current;
+		else if (current->getVehicle()->getCapacity() > 0)
+			vs->push_back(current);
+		else if (current->isShelter)
+			*s = current;
+	}
+
+	return (*p != NULL && vs->size() > 0 && *s != NULL);
+}
+
+void promptContinue() {
+	cout << "Press enter to continue..." << endl;
+	cin.get();
+}
+
+void clearEdges(GraphViewer* gv, vector<int> *edges) {
+	for (int i = 0; i < edges->size(); i++)
+		gv->setEdgeColor((*edges)[i], DEFAULT_EDGE_COLOR);
+	gv->rearrange();
+	edges->clear();
 }
 
 void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	cin.ignore(INT_MAX, '\n');
-	bool removedAll = false;
-	int source, destination, current;
-	Vertex<int> *p = NULL, *v = NULL, *s = NULL;
-	vector<Vertex<int> *> vs;
-	for (int i = 0; i < graph->getNumVertex(); i++) {
-		Vertex<int>* current = graph->getVertexSet()[i];
-		if (current->getPeople() > 0)
-			p = current;
-		else if (current->getVehicle()->getCapacity() > 0)
-			vs.push_back(current);
-		else if (current->isShelter)
-			s = current;
-	}
-	if (p == NULL || vs.size() == 0 || s == NULL) {
-		cout << "Nodes não existem" << endl << "Press enter to continue...";
-		cin.get();
-		return;
-	}
-
-	int closestVehicle, currentCapacity;
-	Vertex<int>* path;
+	bool removedAll = false, found = true;;
+	int closestVehicle, people, removedP;
 	vector<int> visited_edges;
 	Edge<int>* pathedge;
-	bool found = true;
-	int sum;
-	closestVehicle = getClosestVehicle(graph, vs, p);
+	Vertex<int> *p = NULL, *v = NULL, *s = NULL, *current, *path;
+	vector<Vertex<int> *> vehicles;
+	if (!populateNodes(graph, &p, &s, &vehicles)) { //graph not complete
+		cout << "Grafo não completo" << endl;
+		return promptContinue();
+	}
+
+	closestVehicle = getClosestVehicle(graph, vehicles, p);
 	if (closestVehicle != 0) {
 		v = graph->getVertex(closestVehicle);
-		source = closestVehicle;
 	} else {
-		cout << " Veículo sem acesso" << endl;
-		cout << endl << "Press enter to continue...";
-		cin.get();
+		cout << "Nenhum Veículo com acesso" << endl;
+		return promptContinue();
 	}
-	bool newVehicle = false; //new vehicle on shelter
-	while (!removedAll) {
-		destination = p->getInfo();
-		sum = 0;
-		graph->dijkstraShortestPath(source);
-
-		//first iteration
-		current = destination;
-		cout << current;
-		do { //para as pessoas
-			path = graph->getVertex(current)->path;
-			pathedge = graph->getVertex(current)->pathedge;
-			if (path == NULL) {
-				cout << " Caminho não encontrado";
-				found = false;
-				break;
-			}
-			current = path->getInfo();
-			cout << "<" << current;
-			gv->setEdgeColor(pathedge->getId(), "red");
-			sum += pathedge->getWeight();
-			visited_edges.push_back(pathedge->getId());
-		} while (current != source);
+	while (!removedAll) { //repeat until all people saved
+		found = shortestPath(gv, graph, &v, &p, &visited_edges, "red"); //To people
 		if (found) {
-			gv->rearrange();
-			cout << endl << "Distância a percorrer: " << sum << endl;
-			cout << "Free seats: " << v->getVehicle()->getFreeSeats() << endl;
-			cout << "Pessoas no abrigo" << p->getPeople() << endl;
-			int removedP = v->getVehicle()->removeFreeSeats(p->getPeople());
-			removedAll = removedP == p->getPeople();
+			removedP = v->getVehicle()->removeFreeSeats(p->getPeople()); //How many people we can remove
+			p->removePeople(removedP);
+			people = p->getPeople();
+			cout << "Evacuadas " << removedP << " pessoas." << endl;
+			cout << "Ficaram " << people << " pessoas." << endl;
+			removedAll = (people==0);
 			if (removedAll) {
 				gv->setVertexColor(p->getInfo(), DEFAULT_VERTEX_COLOR);
 				gv->rearrange();
 			}
-			p->removePeople(removedP);
-			cout << "Removidas " << removedP << " pessoas." << endl;
-			cout << "Pessoas no abrigo" << p->getPeople() << endl;
-			cout << "Free seats: " << v->getVehicle()->getFreeSeats();
-		}
-		cout << endl << "Press enter to continue...";
-		cin.get();
-		for (int i = 0; i < visited_edges.size(); i++)
-			gv->setEdgeColor(visited_edges[i], DEFAULT_EDGE_COLOR);
-		visited_edges.clear();
-		if (found) {
-			source = destination;
-			destination = s->getInfo();
-			graph->dijkstraShortestPath(source);
+			promptContinue();
+			clearEdges(gv, &visited_edges);
 
-			//first iteration
-			current = destination;
-			cout << current;
-			sum = 0;
-			do { //para o abrigo
-				path = graph->getVertex(current)->path;
-				pathedge = graph->getVertex(current)->pathedge;
-				if (path == NULL) {
-					cout << " Caminho não encontrado";
-					found = false;
-					break;
-				}
-				current = path->getInfo();
-				cout << "<" << current;
-				gv->setEdgeColor(pathedge->getId(), "green");
-				sum += pathedge->getWeight();
-				visited_edges.push_back(pathedge->getId());
-			} while (current != source);
+			found = shortestPath(gv, graph, &p, &s, &visited_edges, "green"); //To shelter
 			if (found) {
-				gv->rearrange();
-				cout << endl << "Distância a percorrer: " << sum << endl;
 				v->getVehicle()->resetFreeSeats();
-				cout << "Pessoas entregues no abrigo" << endl;
-			}
-			cout << endl << "Press enter to continue...";
-			cin.get();
-			for (int i = 0; i < visited_edges.size(); i++)
-				gv->setEdgeColor(visited_edges[i], DEFAULT_EDGE_COLOR);
-			gv->rearrange();
-			visited_edges.clear();
-		}
-		if (!removedAll) {
-			source = s->getInfo();
-			destination = p->getInfo();
-			if (newVehicle) { //new vehicle departed on previous cycle
-				v->getVehicle()->addCapacity(currentCapacity); //os veículos vão em conjunto / v é o ultimo veiculo a ter chegado
-				newVehicle = false;
-			}
-			vs.push_back(s); //nó falso (representa o veículo actualmente no abrigo)
-			vs.erase(find(vs.begin(), vs.end(), v));
-			closestVehicle = getClosestVehicle(graph, vs, p);
-			if (closestVehicle != 0) {
-				if (closestVehicle != s->getInfo()) { //trocou de veículo
-					currentCapacity = v->getVehicle()->getCapacity(); //capacidade da soma dos veículos no abrigo
-					v = graph->getVertex(closestVehicle);
-					source = closestVehicle;
-					newVehicle = true;
+				cout << "Pessoas entregues no abrigo." << endl;
+				if (!removedAll) {
+					if (v != s) {
+						s->getVehicle()->addCapacity(v->getVehicle()->getCapacity());
+						vehicles.erase(find(vehicles.begin(), vehicles.end(), v));
+						closestVehicle = getClosestVehicle(graph, vehicles, p, s);
+						if (closestVehicle != 0)
+							v = graph->getVertex(closestVehicle);
+						else //only on first time that there are no vehicles closer from the shelter
+						{
+							v = s; //new vehicle base is shelter
+							vehicles.push_back(v);
+						}
+					}
 				}
 			}
-			vs.erase(find(vs.begin(), vs.end(), s));
+			else
+				break;
+			promptContinue();
+			clearEdges(gv, &visited_edges);
 		}
-		//TODO: Ver se o segundo veículo mais próximo é mais rápido do que múltiplas viagens
+		else
+			break;
 	}
-
+	if(!found)
+		promptContinue();
+	s->addVehicle(Vehicle(0)); //clear vehicles from shelter;
 }
 
 int main() {
@@ -299,27 +233,3 @@ int main() {
 		}
 	}
 }
-
-void printSquareArray(int ** arr, unsigned int size) {
-	for (unsigned int k = 0; k < size; k++) {
-		if (k == 0) {
-			cout << "   ";
-			for (unsigned int i = 0; i < size; i++)
-				cout << " " << i + 1 << " ";
-			cout << endl;
-		}
-
-		for (unsigned int i = 0; i < size; i++) {
-			if (i == 0)
-				cout << " " << k + 1 << " ";
-
-			if (arr[k][i] == INT_INFINITY)
-				cout << " - ";
-			else
-				cout << " " << arr[k][i] << " ";
-		}
-
-		cout << endl;
-	}
-}
-
