@@ -64,7 +64,7 @@ class GraphViewer {
    */
   GraphViewer(int width, int height, bool dynamic, int port_n);
   
-  void GraphViewer::importGraph(Graph<int> graph);
+  void importGraph(Graph<int> graph);
 
   /**
    * Função que cria a janela para visualização.

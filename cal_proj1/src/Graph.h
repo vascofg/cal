@@ -198,6 +198,7 @@ class Graph {
 	int ** P;   //path
 
 public:
+	Graph();
 	bool addVertex(const T &in);
 	bool addEdge(const T &sourc, const T &dest, double w);
 	bool removeVertex(const T &in);
@@ -229,6 +230,11 @@ public:
 	int numEdge; //unique num edge identifier, to identify edges on graphviewer
 };
 
+
+template <class T>
+Graph<T>::Graph() {
+	this->numEdge=0;
+}
 
 template <class T>
 int Graph<T>::getNumVertex() const {

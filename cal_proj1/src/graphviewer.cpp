@@ -24,17 +24,16 @@ void GraphViewer::importGraph(Graph<int> graph) {
 	}
 	int count = 1;
 	Vertex<int>* v;
-	Edge<int>* e;
 	stringstream ss;
 	for (int i = 0; i < graph.getNumVertex(); i++) {
 		v = graph.getVertexSet()[i];
 		for (unsigned int j = 0; j < v->getAdj().size(); j++) {
-			e=&v->getAdj()[j];
+			Edge<int> e=v->getAdj()[j];
 			ss.str(string()); //clear ss
-			this->addEdge(e->getId(), v->getInfo(),
-					e->getDest()->getInfo(), EdgeType::DIRECTED);
-			ss << e->getWeight();
-			this->setEdgeLabel(e->getId(), ss.str());
+			this->addEdge(e.getId(), v->getInfo(),
+					e.getDest()->getInfo(), EdgeType::DIRECTED);
+			ss << e.getWeight();
+			this->setEdgeLabel(e.getId(), ss.str());
 		}
 	}
 }

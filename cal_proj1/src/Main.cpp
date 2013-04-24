@@ -5,7 +5,7 @@
 using namespace std;
 
 Graph<int> CreateTestGraph() {
-	Graph<int> myGraph;
+	Graph<int> myGraph = *new Graph<int>();
 
 	for (int i = 1; i < 8; i++) {
 		myGraph.addVertex(i);
@@ -38,14 +38,14 @@ GraphViewer* prepareGraphViewer(Graph<int>* graph) {
 
 void shortestPath(GraphViewer* gv, Graph<int>* graph) {
 	int source, destination, current;
-	cout << "Primeiro nó:";
+	cout << "Primeiro nÃ³:";
 	cin >> source;
-	cout << "Segundo nó:";
+	cout << "Segundo nÃ³:";
 	cin >> destination;
 	cin.ignore(INT_MAX, '\n');
 	if(graph->getVertex(source)==NULL || graph->getVertex(destination)==NULL)
 	{
-		cout << "Nodes não existem" << endl << "Press enter to continue...";
+		cout << "Nodes nÃ£o existem" << endl << "Press enter to continue...";
 		cin.get();
 		return;
 	}
@@ -66,7 +66,7 @@ void shortestPath(GraphViewer* gv, Graph<int>* graph) {
 		path = graph->getVertex(current)->path;
 		pathedge = graph->getVertex(current)->pathedge;
 		if (path == NULL) {
-			cout << " Caminho não encontrado";
+			cout << " Caminho nÃ£o encontrado";
 			found=false;
 			break;
 		}
@@ -77,7 +77,7 @@ void shortestPath(GraphViewer* gv, Graph<int>* graph) {
 		visited_edges.push_back(pathedge->getId());
 	} while (current != source);
 	if(found)
-		cout << endl << "Distância a percorrer: " << sum << endl;
+		cout << endl << "DistÃ¢ncia a percorrer: " << sum << endl;
 	cout << endl << "Press enter to continue...";
 	cin.get();
 	gv->setVertexColor(source, DEFAULT_VERTEX_COLOR);
@@ -93,7 +93,7 @@ int main() {
 	int opt;
 	while (true) {
 		cout
-				<< "Sistema de evacuação\n1-Abrir nova janela\n2-Caminho mais curto\n0-Sair\nOpção:";
+				<< "Sistema de evacuaÃ§Ã£o\n1-Abrir nova janela\n2-Caminho mais curto\n0-Sair\nOpÃ§Ã£o:";
 		cin >> opt;
 		switch (opt) {
 		case 1:
