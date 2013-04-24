@@ -36,7 +36,8 @@ class Vertex {
 	bool processing;
 	int indegree;
 	double dist;
-	vector<Vehicle> vehicles;
+	Vehicle vehicle;
+	int people;
 public:
 
 	Vertex(T in);
@@ -55,14 +56,36 @@ public:
 
 	vector<Edge<T>  > getAdj();
 
-	vector<Vehicle> getVehicles();
+	Vehicle* getVehicle();
 
 	void addVehicle(Vehicle v);
 
+	int getPeople();
+
+	void addPeople(int p);
+
+	void removePeople(int p);
+
 	Vertex* path;
 	Edge<T>* pathedge;
+
+	bool isShelter;
 };
 
+template <class T>
+int Vertex<T>::getPeople(){
+	return this->people;
+}
+
+template <class T>
+void Vertex<T>::addPeople(int p){
+	this->people+=p;
+};
+
+template <class T>
+void Vertex<T>::removePeople(int p){
+	this->people-=p;
+};
 
 template <class T>
 struct vertex_greater_than {
@@ -88,8 +111,10 @@ bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
 
 //atualizado pelo exerc�cio 5
 template <class T>
-Vertex<T>::Vertex(T in): info(in), visited(false), processing(false), indegree(0), dist(0) {
+Vertex<T>::Vertex(T in): info(in), visited(false), processing(false), indegree(0), dist(0), vehicle(Vehicle(0)) {
 	path = NULL;
+	people=0;
+	isShelter=false;
 }
 
 
@@ -126,8 +151,15 @@ vector<Edge<T>  > Vertex<T>::getAdj(){
 	return this->adj;
 }
 
+template <class T>
+void Vertex<T>::addVehicle(Vehicle v){
+	this->vehicle=v;
+}
 
-
+template <class T>
+Vehicle * Vertex<T>::getVehicle(){
+	return &this->vehicle;
+}
 
 /* ================================================================================================
  * Class Edge
@@ -164,17 +196,6 @@ Vertex<T> * Edge<T>::getDest(){
 template <class T>
 double Edge<T>::getWeight(){
 	return this->weight;
-}
-
-
-template <class T>
-void Vertex<T>::addVehicle(Vehicle v){
-	this->vehicles.push_back(v);
-}
-
-template <class T>
-vector<Vehicle> Vertex<T>::getVehicles(){
-	return this->vehicles;
 }
 
 
