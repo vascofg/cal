@@ -39,25 +39,6 @@ Graph<int> CreateTestGraph() {
 	return myGraph;
 }
 
-bool addVehicles(GraphViewer *gv, Graph<int>* graph, vector<Vertex<int>*> vehicles)
-{
-	int nvehicles;
-	cout << "quantos veículos? ";
-	cin >> nvehicles;
-	if(nvehicles>vehicles.size() || nvehicles<1)
-	{
-		cout << "Número de veículos inválido" << endl;
-		return addVehicles(gv,graph,vehicles);
-	}
-	for(int i=0;i<nvehicles;i++)
-	{
-		graph->getVertex(vehicles[i]->getInfo())->addVehicle(Vehicle(VEHICLE_CAPACITY));
-		gv->setVertexColor(vehicles[i]->getInfo(),VEHICLE_COLOR);
-	}
-	gv->rearrange();
-	return true;
-}
-
 GraphViewer* prepareGraphViewer(Graph<int>* graph) {
 	GraphViewer *gv = new GraphViewer(600, 600, true);
 	gv->createWindow(600, 600);
@@ -135,29 +116,46 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		return NULL;
 }
 
-vector<Vertex<int> *> listClosestNodes(Graph<int>* graph) {
-	Vertex<int> *current, *p, *s;
-	vector<Vertex<int> *> nodes;
-	int dist_to_shelter, dist_to_people;
-	for (int i = 0; i < graph->getNumVertex(); i++) { //populate nodes
-		current = graph->getVertexSet()[i];
-		if (current->getPeople() > 0)
-			p = current;
-		else if (current->isShelter)
-			s = current;
-		else
-			nodes.push_back(current);
-	}
-	shortestPath(graph, &p, &s, &dist_to_shelter);
-	cout << "distância das pessoas ao shelter: " << dist_to_shelter << endl;
+vector<Vertex<int> *> getClosestNodes(Graph<int>* graph, vector<Vertex<int> *> nodes, Vertex<int> *dest) {
+	Vertex<int> *current;
+	int dist;
 	for (int i = 0; i < nodes.size(); i++) {
-		if (shortestPath(graph, &nodes[i], &p, &dist_to_people)) {
-			nodes[i]->setDistAux(dist_to_people);
+		if (shortestPath(graph, &nodes[i], &dest, &dist)) {
+			nodes[i]->setDistAux(dist);
 		} else
 			nodes.erase(nodes.begin() + i); //delete node (not suitable)
 	}
 	sort(nodes.begin(), nodes.end(), vertex_dist_smaller_than<int>());
 	return nodes;
+}
+
+bool addVehicles(GraphViewer *gv, Graph<int>* graph)
+{
+	vector<Vertex<int> *> vehicles;
+	Vertex<int> *current, *p;
+	int nvehicles;
+	cout << "quantos veículos? ";
+	cin >> nvehicles;
+	for (int i = 0; i < graph->getNumVertex(); i++) { //populate nodes
+		current = graph->getVertexSet()[i];
+		if (current->getPeople() > 0)
+			p = current;
+		else if (!current->isShelter)
+			vehicles.push_back(current);
+	}
+	vehicles = getClosestNodes(graph, vehicles, p);
+	if(nvehicles>vehicles.size() || nvehicles<1)
+	{
+		cout << "Número de veículos inválido" << endl;
+		return addVehicles(gv,graph);
+	}
+	for(int i=0;i<nvehicles;i++)
+	{
+		graph->getVertex(vehicles[i]->getInfo())->addVehicle(Vehicle(VEHICLE_CAPACITY));
+		gv->setVertexColor(vehicles[i]->getInfo(),VEHICLE_COLOR);
+	}
+	gv->rearrange();
+	return true;
 }
 
 bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
@@ -291,9 +289,8 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 int main() {
 	Graph<int> graph = CreateTestGraph();
 	GraphViewer *gv = prepareGraphViewer(&graph);
-	vector<Vertex<int> *> closestNodes = listClosestNodes(&graph);
 	int opt;
-	addVehicles(gv,&graph,closestNodes);
+	addVehicles(gv,&graph);
 	while (true) {
 		cout
 				<< "Sistema de evacuação\n1-Abrir nova janela\n2-Salvar pessoas\n3-Estatísticas do grafo\n0-Sair\nOpção:";
@@ -303,9 +300,6 @@ int main() {
 			gv = prepareGraphViewer(&graph);
 			break;
 		case 2: {
-
-
-
 
 			savePeople(gv, &graph);
 			break;
