@@ -13,10 +13,10 @@ Graph<int> CreateTestGraph() {
 	for (int i = 1; i < 8; i++) {
 		myGraph.addVertex(i);
 	}
-
+	/*
 	myGraph.getVertex(2)->addVehicle(Vehicle(VEHICLE_CAPACITY));
 	myGraph.getVertex(4)->addVehicle(Vehicle(VEHICLE_CAPACITY));
-	myGraph.getVertex(7)->addVehicle(Vehicle(VEHICLE_CAPACITY));
+	myGraph.getVertex(7)->addVehicle(Vehicle(VEHICLE_CAPACITY));*/
 
 	myGraph.getVertex(3)->addPeople(35);
 
@@ -37,6 +37,25 @@ Graph<int> CreateTestGraph() {
 	myGraph.addEdge(7, 6, 4);
 
 	return myGraph;
+}
+
+bool addVehicles(GraphViewer *gv, Graph<int>* graph, vector<Vertex<int>*> vehicles)
+{
+	int nvehicles;
+	cout << "quantos veículos? ";
+	cin >> nvehicles;
+	if(nvehicles>vehicles.size() || nvehicles<1)
+	{
+		cout << "Número de veículos inválido" << endl;
+		return addVehicles(gv,graph,vehicles);
+	}
+	for(int i=0;i<nvehicles;i++)
+	{
+		graph->getVertex(vehicles[i]->getInfo())->addVehicle(Vehicle(VEHICLE_CAPACITY));
+		gv->setVertexColor(vehicles[i]->getInfo(),VEHICLE_COLOR);
+	}
+	gv->rearrange();
+	return true;
 }
 
 GraphViewer* prepareGraphViewer(Graph<int>* graph) {
@@ -116,6 +135,31 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		return NULL;
 }
 
+vector<Vertex<int> *> listClosestNodes(Graph<int>* graph) {
+	Vertex<int> *current, *p, *s;
+	vector<Vertex<int> *> nodes;
+	int dist_to_shelter, dist_to_people;
+	for (int i = 0; i < graph->getNumVertex(); i++) { //populate nodes
+		current = graph->getVertexSet()[i];
+		if (current->getPeople() > 0)
+			p = current;
+		else if (current->isShelter)
+			s = current;
+		else
+			nodes.push_back(current);
+	}
+	shortestPath(graph, &p, &s, &dist_to_shelter);
+	cout << "distância das pessoas ao shelter: " << dist_to_shelter << endl;
+	for (int i = 0; i < nodes.size(); i++) {
+		if (shortestPath(graph, &nodes[i], &p, &dist_to_people)) {
+			nodes[i]->setDistAux(dist_to_people);
+		} else
+			nodes.erase(nodes.begin() + i); //delete node (not suitable)
+	}
+	sort(nodes.begin(), nodes.end(), vertex_dist_smaller_than<int>());
+	return nodes;
+}
+
 bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
 		vector<Vertex<int> *>* vehicles) {
 	Vertex<int>* current;
@@ -144,11 +188,27 @@ void clearEdges(GraphViewer* gv, vector<int> *edges) {
 	edges->clear();
 }
 
-void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes, string color)
-{
-	for(int i=0;i<nodes->size();i++)
-		gv->setVertexColor((*nodes)[i]->getInfo(),color);
+void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes,
+		string color) {
+	for (int i = 0; i < nodes->size(); i++)
+		gv->setVertexColor((*nodes)[i]->getInfo(), color);
 	gv->rearrange();
+}
+
+void printStats(Graph<int>* graph) {
+	Vertex<int> *p, *s;
+	vector<Vertex<int> *> vehicles;
+	if (!populateNodes(graph, &p, &s, &vehicles))
+		cout << "Grafo não completo!" << endl;
+	else {
+		cout << "Existem " << p->getPeople() << " pessoas para socorrer, no nó "
+				<< p->getInfo() << endl;
+		cout << "Os veículos estão localizados nos nós ";
+		for (int i = 0; i < vehicles.size(); i++)
+			cout << vehicles[i]->getInfo() << ", ";
+		cout << "com capacidade para " << VEHICLE_CAPACITY << " pessoas"
+				<< endl;
+	}
 }
 
 void savePeople(GraphViewer* gv, Graph<int>* graph) {
@@ -157,7 +217,8 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	int people, removedP;
 	vector<int> visited_edges;
 	Edge<int>* pathedge;
-	Vertex<int> *p = NULL, *v = NULL, *s = NULL, *current, *path, *closestVehicle;
+	Vertex<int> *p = NULL, *v = NULL, *s = NULL, *current, *path,
+			*closestVehicle;
 	vector<Vertex<int> *> vehicles;
 	if (!populateNodes(graph, &p, &s, &vehicles)) { //graph not complete
 		cout << "Grafo não completo" << endl;
@@ -172,7 +233,8 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 		return promptContinue();
 	}
 	while (!removedAll) { //repeat until all people saved
-		found = shortestPath(gv, graph, &v, &p, &visited_edges, TO_PEOPLE_EDGE_COLOR); //To people
+		found = shortestPath(gv, graph, &v, &p, &visited_edges,
+				TO_PEOPLE_EDGE_COLOR); //To people
 		if (found) {
 			removedP = v->getVehicle()->removeFreeSeats(p->getPeople()); //How many people we can remove
 			p->removePeople(removedP);
@@ -185,7 +247,8 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 				gv->setVertexColor(v->getInfo(), DEFAULT_VERTEX_COLOR);
 			clearEdges(gv, &visited_edges);
 
-			found = shortestPath(gv, graph, &p, &s, &visited_edges, TO_SHELTER_EDGE_COLOR); //To shelter
+			found = shortestPath(gv, graph, &p, &s, &visited_edges,
+					TO_SHELTER_EDGE_COLOR); //To shelter
 			if (found) {
 				v->getVehicle()->resetFreeSeats();
 				cout << "Pessoas entregues no abrigo." << endl;
@@ -220,25 +283,35 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 		promptContinue();
 	s->addVehicle(Vehicle(0)); //clear vehicles from shelter;
 	vehicles.clear();
-	populateNodes(graph,&p,&s,&vehicles); //repopulate nodes
-	setVertexVectorColor(gv,&vehicles,VEHICLE_COLOR); //reset vehicle colors
+	populateNodes(graph, &p, &s, &vehicles); //repopulate nodes
+	setVertexVectorColor(gv, &vehicles, VEHICLE_COLOR); //reset vehicle colors
 	cout << "Todas as pessoas salvas." << endl;
 }
 
 int main() {
-	Graph<int> test = CreateTestGraph();
-	GraphViewer *gv = prepareGraphViewer(&test);
+	Graph<int> graph = CreateTestGraph();
+	GraphViewer *gv = prepareGraphViewer(&graph);
+	vector<Vertex<int> *> closestNodes = listClosestNodes(&graph);
 	int opt;
+	addVehicles(gv,&graph,closestNodes);
 	while (true) {
 		cout
-				<< "Sistema de evacuação\n1-Abrir nova janela\n2-Salvar pessoas\n0-Sair\nOpção:";
+				<< "Sistema de evacuação\n1-Abrir nova janela\n2-Salvar pessoas\n3-Estatísticas do grafo\n0-Sair\nOpção:";
 		cin >> opt;
 		switch (opt) {
 		case 1:
-			gv = prepareGraphViewer(&test);
+			gv = prepareGraphViewer(&graph);
 			break;
 		case 2: {
-			savePeople(gv, &test);
+
+
+
+
+			savePeople(gv, &graph);
+			break;
+		}
+		case 3: {
+			printStats(&graph);
 			break;
 		}
 		case 0:

@@ -36,6 +36,7 @@ class Vertex {
 	bool processing;
 	int indegree;
 	double dist;
+	double distaux;
 	Vehicle vehicle;
 	int people;
 public:
@@ -50,7 +51,10 @@ public:
 	void setInfo(T info);
 
 	int getDist() const;
+	int getDistAux() const;
 	int getIndegree() const;
+
+	void setDistAux(double dist);
 
 	bool operator<(const Vertex<T> vertex);
 
@@ -73,6 +77,12 @@ public:
 };
 
 template <class T>
+void Vertex<T>::setDistAux(double dist){
+	this->distaux=dist;
+}
+
+
+template <class T>
 int Vertex<T>::getPeople(){
 	return this->people;
 }
@@ -91,6 +101,13 @@ template <class T>
 struct vertex_greater_than {
     bool operator()(Vertex<T> * a, Vertex<T> * b) const {
         return a->getDist() > b->getDist();
+    }
+};
+
+template <class T>
+struct vertex_dist_smaller_than {
+    bool operator()(Vertex<T> * a, Vertex<T> * b) const {
+        return a->getDistAux() < b->getDistAux();
     }
 };
 
@@ -135,6 +152,10 @@ int Vertex<T>::getDist() const {
 	return this->dist;
 }
 
+template <class T>
+int Vertex<T>::getDistAux() const {
+	return this->distaux;
+}
 
 template <class T>
 void Vertex<T>::setInfo(T info) {
