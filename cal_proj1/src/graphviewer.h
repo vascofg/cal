@@ -3,6 +3,11 @@
 
 #define DEFAULT_EDGE_COLOR "black"
 #define DEFAULT_VERTEX_COLOR "blue"
+#define VEHICLE_COLOR "red"
+#define PEOPLE_COLOR "pink"
+#define SHELTER_COLOR "white"
+#define TO_SHELTER_EDGE_COLOR "green"
+#define TO_PEOPLE_EDGE_COLOR "red"
 
 #ifdef linux
 	#include <unistd.h>

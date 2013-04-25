@@ -117,19 +117,19 @@ int getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 }
 
 bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
-		vector<Vertex<int> *>* vs) {
+		vector<Vertex<int> *>* vehicles) {
 	Vertex<int>* current;
 	for (int i = 0; i < graph->getNumVertex(); i++) {
 		current = graph->getVertexSet()[i];
 		if (current->getPeople() > 0)
 			*p = current;
 		else if (current->getVehicle()->getCapacity() > 0)
-			vs->push_back(current);
+			vehicles->push_back(current);
 		else if (current->isShelter)
 			*s = current;
 	}
 
-	return (*p != NULL && vs->size() > 0 && *s != NULL);
+	return (*p != NULL && vehicles->size() > 0 && *s != NULL);
 }
 
 void promptContinue() {
@@ -144,9 +144,16 @@ void clearEdges(GraphViewer* gv, vector<int> *edges) {
 	edges->clear();
 }
 
+void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes, string color)
+{
+	for(int i=0;i<nodes->size();i++)
+		gv->setVertexColor((*nodes)[i]->getInfo(),color);
+	gv->rearrange();
+}
+
 void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	cin.ignore(INT_MAX, '\n');
-	bool removedAll = false, found = true;;
+	bool removedAll = false, found = true;
 	int closestVehicle, people, removedP;
 	vector<int> visited_edges;
 	Edge<int>* pathedge;
@@ -165,51 +172,57 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 		return promptContinue();
 	}
 	while (!removedAll) { //repeat until all people saved
-		found = shortestPath(gv, graph, &v, &p, &visited_edges, "red"); //To people
+		found = shortestPath(gv, graph, &v, &p, &visited_edges, TO_PEOPLE_EDGE_COLOR); //To people
 		if (found) {
 			removedP = v->getVehicle()->removeFreeSeats(p->getPeople()); //How many people we can remove
 			p->removePeople(removedP);
 			people = p->getPeople();
 			cout << "Evacuadas " << removedP << " pessoas." << endl;
 			cout << "Ficaram " << people << " pessoas." << endl;
-			removedAll = (people==0);
-			if (removedAll) {
-				gv->setVertexColor(p->getInfo(), DEFAULT_VERTEX_COLOR);
-				gv->rearrange();
-			}
+			removedAll = (people == 0);
 			promptContinue();
+			if (v != s)
+				gv->setVertexColor(v->getInfo(), DEFAULT_VERTEX_COLOR);
 			clearEdges(gv, &visited_edges);
 
-			found = shortestPath(gv, graph, &p, &s, &visited_edges, "green"); //To shelter
+			found = shortestPath(gv, graph, &p, &s, &visited_edges, TO_SHELTER_EDGE_COLOR); //To shelter
 			if (found) {
 				v->getVehicle()->resetFreeSeats();
 				cout << "Pessoas entregues no abrigo." << endl;
 				if (!removedAll) {
 					if (v != s) {
-						s->getVehicle()->addCapacity(v->getVehicle()->getCapacity());
-						vehicles.erase(find(vehicles.begin(), vehicles.end(), v));
-						closestVehicle = getClosestVehicle(graph, vehicles, p, s);
+						s->getVehicle()->addCapacity(
+								v->getVehicle()->getCapacity()); //join vehicle capacity to other vehicles in the shelter
+						vehicles.erase(
+								find(vehicles.begin(), vehicles.end(), v));
+						closestVehicle = getClosestVehicle(graph, vehicles, p,
+								s);
 						if (closestVehicle != 0)
 							v = graph->getVertex(closestVehicle);
 						else //only on first time that there are no vehicles closer from the shelter
 						{
 							v = s; //new vehicle base is shelter
-							vehicles.push_back(v);
+							vehicles.push_back(v); //add vehicles in shelter to vector
 						}
 					}
+				} else {
+					gv->setVertexColor(p->getInfo(), DEFAULT_VERTEX_COLOR); //remove color from people vertex
+					gv->rearrange();
 				}
-			}
-			else
+			} else
 				break;
 			promptContinue();
 			clearEdges(gv, &visited_edges);
-		}
-		else
+		} else
 			break;
 	}
-	if(!found)
+	if (!found)
 		promptContinue();
 	s->addVehicle(Vehicle(0)); //clear vehicles from shelter;
+	vehicles.clear();
+	populateNodes(graph,&p,&s,&vehicles); //repopulate nodes
+	setVertexVectorColor(gv,&vehicles,VEHICLE_COLOR); //reset vehicle colors
+	cout << "Todas as pessoas salvas." << endl;
 }
 
 int main() {

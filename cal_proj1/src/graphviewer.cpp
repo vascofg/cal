@@ -19,14 +19,16 @@ GraphViewer::GraphViewer(int width, int height, bool dynamic, int port_n) {
 void GraphViewer::importGraph(Graph<int> graph) {
 	this->defineVertexColor(DEFAULT_VERTEX_COLOR);
 	this->defineEdgeColor(DEFAULT_EDGE_COLOR);
+	Vertex<int> *current;
 	for (int i = 0; i < graph.getNumVertex(); i++) {
-		this->addNode(graph.getVertexSet()[i]->getInfo());
-		if(graph.getVertexSet()[i]->getVehicle()->getCapacity()>0)
-			this->setVertexColor(graph.getVertexSet()[i]->getInfo(),"red");
-		else if(graph.getVertexSet()[i]->getPeople()>0)
-			this->setVertexColor(graph.getVertexSet()[i]->getInfo(),"pink");
-		else if(graph.getVertexSet()[i]->isShelter)
-			this->setVertexColor(graph.getVertexSet()[i]->getInfo(),"white");
+		current = graph.getVertexSet()[i];
+		this->addNode(current->getInfo());
+		if(current->getVehicle()->getCapacity()>0)
+			this->setVertexColor(current->getInfo(),VEHICLE_COLOR);
+		else if(current->getPeople()>0)
+			this->setVertexColor(current->getInfo(),PEOPLE_COLOR);
+		else if(current->isShelter)
+			this->setVertexColor(current->getInfo(),SHELTER_COLOR);
 	}
 	Vertex<int>* v;
 	stringstream ss;
