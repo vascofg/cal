@@ -94,7 +94,7 @@ bool shortestPath(Graph<int>* graph, Vertex<int> **source, Vertex<int> **dest,
 			DEFAULT_EDGE_COLOR, &(*dist), false);
 }
 
-int getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
+Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		Vertex<int>* p, Vertex<int>* s = NULL) {
 	int sum, minsum = INT_MAX;
 	Vertex<int> *current, *minvertex = NULL, *path;
@@ -111,9 +111,9 @@ int getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		}
 	}
 	if (minvertex != NULL)
-		return minvertex->getInfo();
+		return minvertex;
 	else
-		return 0;
+		return NULL;
 }
 
 bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
@@ -154,10 +154,10 @@ void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes, string 
 void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	cin.ignore(INT_MAX, '\n');
 	bool removedAll = false, found = true;
-	int closestVehicle, people, removedP;
+	int people, removedP;
 	vector<int> visited_edges;
 	Edge<int>* pathedge;
-	Vertex<int> *p = NULL, *v = NULL, *s = NULL, *current, *path;
+	Vertex<int> *p = NULL, *v = NULL, *s = NULL, *current, *path, *closestVehicle;
 	vector<Vertex<int> *> vehicles;
 	if (!populateNodes(graph, &p, &s, &vehicles)) { //graph not complete
 		cout << "Grafo não completo" << endl;
@@ -165,8 +165,8 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	}
 
 	closestVehicle = getClosestVehicle(graph, vehicles, p);
-	if (closestVehicle != 0) {
-		v = graph->getVertex(closestVehicle);
+	if (closestVehicle != NULL) {
+		v = closestVehicle;
 	} else {
 		cout << "Nenhum Veículo com acesso" << endl;
 		return promptContinue();
@@ -197,8 +197,8 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 								find(vehicles.begin(), vehicles.end(), v));
 						closestVehicle = getClosestVehicle(graph, vehicles, p,
 								s);
-						if (closestVehicle != 0)
-							v = graph->getVertex(closestVehicle);
+						if (closestVehicle != NULL)
+							v = closestVehicle;
 						else //only on first time that there are no vehicles closer from the shelter
 						{
 							v = s; //new vehicle base is shelter
