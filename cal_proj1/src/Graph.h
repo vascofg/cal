@@ -38,7 +38,7 @@ class Vertex {
 	double dist;
 	double distaux;
 	Vehicle vehicle;
-	int people;
+	unsigned int people;
 public:
 
 	Vertex(T in);
@@ -64,11 +64,11 @@ public:
 
 	void addVehicle(Vehicle v);
 
-	int getPeople();
+	unsigned int getPeople();
 
-	void addPeople(int p);
+	void addPeople(unsigned int p);
 
-	void removePeople(int p);
+	void removePeople(unsigned int p);
 
 	Vertex* path;
 	Edge<T>* pathedge;
@@ -83,17 +83,17 @@ void Vertex<T>::setDistAux(double dist){
 
 
 template <class T>
-int Vertex<T>::getPeople(){
+unsigned int Vertex<T>::getPeople(){
 	return this->people;
 }
 
 template <class T>
-void Vertex<T>::addPeople(int p){
+void Vertex<T>::addPeople(unsigned int p){
 	this->people+=p;
 };
 
 template <class T>
-void Vertex<T>::removePeople(int p){
+void Vertex<T>::removePeople(unsigned int p){
 	this->people-=p;
 };
 

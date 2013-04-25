@@ -3,7 +3,7 @@
 #include "graphviewer.h"
 #include <algorithm>
 
-int vehicle_capacity; //capacity for all vehicles (to be defined by user)
+unsigned int vehicle_capacity; //capacity for all vehicles (to be defined by user)
 
 using namespace std;
 
@@ -101,7 +101,7 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 	int sum, minsum = INT_MAX;
 	Vertex<int> *minvertex = NULL;
 
-	for (int i = 0; i < v.size(); i++) { //for each vertex (with vehicles), get shortest path to people
+	for (unsigned int i = 0; i < v.size(); i++) { //for each vertex (with vehicles), get shortest path to people
 		sum = 0;
 		if (shortestPath(graph, &v[i], &p, &sum)) {
 			//cout << endl << "Distância a percorrer: " << sum << endl;
@@ -120,7 +120,7 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 		vector<Vertex<int> *> nodes, Vertex<int> *dest) {
 	int dist;
-	for (int i = 0; i < nodes.size(); i++) {
+	for (unsigned int i = 0; i < nodes.size(); i++) {
 		if (shortestPath(graph, &nodes[i], &dest, &dist)) {
 			nodes[i]->setDistAux(dist);
 		} else
@@ -133,7 +133,7 @@ vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 bool addVehicles(Graph<int>* graph) {
 	vector<Vertex<int> *> vehicles;
 	Vertex<int> *current, *p;
-	int nvehicles;
+	unsigned int nvehicles;
 	cout << "Número de pontos estratégicos: ";
 	cin >> nvehicles;
 	for (int i = 0; i < graph->getNumVertex(); i++) { //populate nodes
@@ -148,7 +148,7 @@ bool addVehicles(Graph<int>* graph) {
 		cout << "Número de veículos inválido" << endl;
 		return addVehicles(graph);
 	}
-	for (int i = 0; i < nvehicles; i++) {
+	for (unsigned int i = 0; i < nvehicles; i++) {
 		graph->getVertex(vehicles[i]->getInfo())->addVehicle(
 				Vehicle(vehicle_capacity));
 	}
@@ -177,7 +177,7 @@ void promptContinue() {
 }
 
 void clearEdges(GraphViewer* gv, vector<int> *edges) {
-	for (int i = 0; i < edges->size(); i++)
+	for (unsigned int i = 0; i < edges->size(); i++)
 		gv->setEdgeColor((*edges)[i], DEFAULT_EDGE_COLOR);
 	gv->rearrange();
 	edges->clear();
@@ -185,7 +185,7 @@ void clearEdges(GraphViewer* gv, vector<int> *edges) {
 
 void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes,
 		string color) {
-	for (int i = 0; i < nodes->size(); i++)
+	for (unsigned int i = 0; i < nodes->size(); i++)
 		gv->setVertexColor((*nodes)[i]->getInfo(), color);
 	gv->rearrange();
 }
@@ -205,7 +205,7 @@ void printStats(Graph<int>* graph) {
 			cout << "O veículo está localizado no nó ";
 		else
 			cout << "Os veículos estão localizados nos nós ";
-		for (int i = 0; i < vehicles.size(); i++)
+		for (unsigned int i = 0; i < vehicles.size(); i++)
 			cout << vehicles[i]->getInfo() << ", ";
 		cout << "com capacidade para " << vehicle_capacity << " pessoas"
 				<< endl;

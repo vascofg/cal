@@ -11,7 +11,7 @@ public:
 	unsigned int getCapacity(){
 		return capacity;
 	}
-	int removeFreeSeats(int s)
+	unsigned int removeFreeSeats(unsigned int s)
 	{
 		if(s>this->freeSeats)
 		{
