@@ -99,8 +99,7 @@ bool shortestPath(Graph<int>* graph, Vertex<int> **source, Vertex<int> **dest,
 Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		Vertex<int>* p, Vertex<int>* s = NULL) {
 	int sum, minsum = INT_MAX;
-	Vertex<int> *current, *minvertex = NULL, *path;
-	Edge<int>* pathedge;
+	Vertex<int> *minvertex = NULL;
 
 	for (int i = 0; i < v.size(); i++) { //for each vertex (with vehicles), get shortest path to people
 		sum = 0;
@@ -120,7 +119,6 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 
 vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 		vector<Vertex<int> *> nodes, Vertex<int> *dest) {
-	Vertex<int> *current;
 	int dist;
 	for (int i = 0; i < nodes.size(); i++) {
 		if (shortestPath(graph, &nodes[i], &dest, &dist)) {
@@ -219,9 +217,7 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	bool removedAll = false, found = true;
 	int people, removedP;
 	vector<int> visited_edges;
-	Edge<int>* pathedge;
-	Vertex<int> *p = NULL, *v = NULL, *s = NULL, *current, *path,
-			*closestVehicle;
+	Vertex<int> *p = NULL, *v = NULL, *s = NULL, *closestVehicle;
 	vector<Vertex<int> *> vehicles;
 	if (!populateNodes(graph, &p, &s, &vehicles)) { //graph not complete
 		cout << "Grafo não completo" << endl;
