@@ -3,7 +3,7 @@
 #include "graphviewer.h"
 #include <algorithm>
 
-#define VEHICLE_CAPACITY 5
+int vehicle_capacity; //capacity for all vehicles (to be defined by user)
 
 using namespace std;
 
@@ -13,10 +13,6 @@ Graph<int> CreateTestGraph() {
 	for (int i = 1; i < 8; i++) {
 		myGraph.addVertex(i);
 	}
-	/*
-	myGraph.getVertex(2)->addVehicle(Vehicle(VEHICLE_CAPACITY));
-	myGraph.getVertex(4)->addVehicle(Vehicle(VEHICLE_CAPACITY));
-	myGraph.getVertex(7)->addVehicle(Vehicle(VEHICLE_CAPACITY));*/
 
 	myGraph.getVertex(3)->addPeople(35);
 
@@ -37,6 +33,12 @@ Graph<int> CreateTestGraph() {
 	myGraph.addEdge(7, 6, 4);
 
 	return myGraph;
+}
+
+void addDefaultVehicles(Graph<int> *graph) {
+	graph->getVertex(2)->addVehicle(Vehicle(vehicle_capacity));
+	graph->getVertex(4)->addVehicle(Vehicle(vehicle_capacity));
+	graph->getVertex(7)->addVehicle(Vehicle(vehicle_capacity));
 }
 
 GraphViewer* prepareGraphViewer(Graph<int>* graph) {
@@ -116,7 +118,8 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		return NULL;
 }
 
-vector<Vertex<int> *> getClosestNodes(Graph<int>* graph, vector<Vertex<int> *> nodes, Vertex<int> *dest) {
+vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
+		vector<Vertex<int> *> nodes, Vertex<int> *dest) {
 	Vertex<int> *current;
 	int dist;
 	for (int i = 0; i < nodes.size(); i++) {
@@ -129,12 +132,11 @@ vector<Vertex<int> *> getClosestNodes(Graph<int>* graph, vector<Vertex<int> *> n
 	return nodes;
 }
 
-bool addVehicles(GraphViewer *gv, Graph<int>* graph)
-{
+bool addVehicles(Graph<int>* graph) {
 	vector<Vertex<int> *> vehicles;
 	Vertex<int> *current, *p;
 	int nvehicles;
-	cout << "quantos veículos? ";
+	cout << "Número de pontos estratégicos: ";
 	cin >> nvehicles;
 	for (int i = 0; i < graph->getNumVertex(); i++) { //populate nodes
 		current = graph->getVertexSet()[i];
@@ -144,17 +146,14 @@ bool addVehicles(GraphViewer *gv, Graph<int>* graph)
 			vehicles.push_back(current);
 	}
 	vehicles = getClosestNodes(graph, vehicles, p);
-	if(nvehicles>vehicles.size() || nvehicles<1)
-	{
+	if (nvehicles > vehicles.size() || nvehicles < 1) {
 		cout << "Número de veículos inválido" << endl;
-		return addVehicles(gv,graph);
+		return addVehicles(graph);
 	}
-	for(int i=0;i<nvehicles;i++)
-	{
-		graph->getVertex(vehicles[i]->getInfo())->addVehicle(Vehicle(VEHICLE_CAPACITY));
-		gv->setVertexColor(vehicles[i]->getInfo(),VEHICLE_COLOR);
+	for (int i = 0; i < nvehicles; i++) {
+		graph->getVertex(vehicles[i]->getInfo())->addVehicle(
+				Vehicle(vehicle_capacity));
 	}
-	gv->rearrange();
 	return true;
 }
 
@@ -194,17 +193,23 @@ void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes,
 }
 
 void printStats(Graph<int>* graph) {
-	Vertex<int> *p, *s;
+	Vertex<int> *p = NULL, *s = NULL;
 	vector<Vertex<int> *> vehicles;
 	if (!populateNodes(graph, &p, &s, &vehicles))
 		cout << "Grafo não completo!" << endl;
 	else {
-		cout << "Existem " << p->getPeople() << " pessoas para socorrer, no nó "
-				<< p->getInfo() << endl;
-		cout << "Os veículos estão localizados nos nós ";
+		if (p->getPeople() == 1)
+			cout << "Existe 1 pessoa para socorrer";
+		else
+			cout << "Existem " << p->getPeople() << " pessoas para socorrer";
+		cout << ", no nó " << p->getInfo() << endl;
+		if (vehicles.size() == 1)
+			cout << "O veículo está localizado no nó ";
+		else
+			cout << "Os veículos estão localizados nos nós ";
 		for (int i = 0; i < vehicles.size(); i++)
 			cout << vehicles[i]->getInfo() << ", ";
-		cout << "com capacidade para " << VEHICLE_CAPACITY << " pessoas"
+		cout << "com capacidade para " << vehicle_capacity << " pessoas"
 				<< endl;
 	}
 }
@@ -286,12 +291,45 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	cout << "Todas as pessoas salvas." << endl;
 }
 
+void startUp(Graph<int> *graph) {
+	int opt;
+	bool exit = false;
+	while (!exit) { //Vehicle capacity option
+		cout << "Capacidade dos veículos: ";
+		cin >> opt;
+		cin.ignore(INT_MAX, '\n');
+		if (opt > 0) {
+			vehicle_capacity = opt;
+			exit = true;
+		}
+	}
+	exit = false;
+	while (!exit) { //Strategic points option
+		cout
+				<< "1-Pontos estratégicos estáticos\n2-Pontos estratégicos dinâmicos\nOpção: ";
+		cin >> opt;
+		cin.ignore(INT_MAX, '\n');
+		switch (opt) {
+		case 1:
+			addDefaultVehicles(graph);
+			exit = true;
+			break;
+		case 2:
+			addVehicles(graph);
+			exit = true;
+			break;
+		default:
+			cout << "Opção inválida!" << endl;
+		}
+	}
+}
+
 int main() {
 	Graph<int> graph = CreateTestGraph();
-	GraphViewer *gv = prepareGraphViewer(&graph);
 	int opt;
-	addVehicles(gv,&graph);
-	while (true) {
+	startUp(&graph);
+	GraphViewer *gv = prepareGraphViewer(&graph);
+	while (true) { //Main menu option
 		cout
 				<< "Sistema de evacuação\n1-Abrir nova janela\n2-Salvar pessoas\n3-Estatísticas do grafo\n0-Sair\nOpção:";
 		cin >> opt;
@@ -310,6 +348,9 @@ int main() {
 		}
 		case 0:
 			return 0;
+		default:
+			cout << "Opção inválida!" << endl;
+			break;
 		}
 	}
 }

@@ -188,9 +188,9 @@ Vehicle * Vertex<T>::getVehicle(){
  */
 template <class T>
 class Edge {
-	int id;
 	Vertex<T> * dest;
 	double weight;
+	int id;
 public:
 	Edge(Vertex<T> *d, double w, int id);
 	friend class Graph<T>;
