@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.3.1"/>
+<title>Sistema de Evacuação: Código-Fonte de graphviewer.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">Sistema de Evacuação
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Gerado por Doxygen 1.8.3.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Localizar');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Página&#160;principal</span></a></li>
+      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="files.html"><span>Ficheiros</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Localizar" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Lista&#160;de&#160;ficheiros</span></a></li>
+      <li><a href="globals.html"><span>Ficheiros&#160;membro</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tudo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Ficheiros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funções</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variáveis</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Amigos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">graphviewer.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="graphviewer_8h.html">Ir para a documentação deste ficheiro.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;﻿#ifndef _GRAPH_VIEWER_H_</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define _GRAPH_VIEWER_H_</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00004"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#afc7c125091ba180d90d5c7aa19645d38">    4</a></span>&#160;<span class="preprocessor">#define DEFAULT_EDGE_COLOR &quot;black&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a6e6e0f0a07b275692baea5c5ea99ae45">    5</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DEFAULT_VERTEX_COLOR &quot;blue&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a687a7041f1313e7c7836ff0c79e6c083">    6</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define VEHICLE_COLOR &quot;red&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a6c375c9aa95e80d5206749e2d6b3857d">    7</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PEOPLE_COLOR &quot;pink&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#aa2b6ccd23ff095dc4e87e1764d6a9ecc">    8</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define SHELTER_COLOR &quot;white&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a5685348142c7492c0c2f9832334019e3">    9</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TO_SHELTER_EDGE_COLOR &quot;green&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a2b06eca8dbd09f121a2d69f92a2553b7">   10</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define TO_PEOPLE_EDGE_COLOR &quot;red&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#ifdef linux</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span><span class="preprocessor">    #include &lt;unistd.h&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor"></span><span class="preprocessor">    #include &lt;winsock2.h&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">    #include &lt;Windows.h&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;signal.h&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="edgetype_8h.html">edgetype.h</a>&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="connection_8h.html">connection.h</a>&quot;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_graph_8h.html">Graph.h</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a79d10e672abb49ad63eeaa8aaef57c38">   27</a></span>&#160;<span class="preprocessor">#define BLUE &quot;BLUE&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a8d23feea868a983c8c2b661e1e16972f">   28</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define RED &quot;RED&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#ada419fe3b48fcf19daed7cc57ccf1174">   29</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PINK &quot;PINK&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a7b3b25cba33b07c303f3060fe41887f6">   30</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define BLACK &quot;BLACK&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a87b537f5fa5c109d3c05c13d6b18f382">   31</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define WHITE &quot;WHITE&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#ac5b6e19bf06822021f35602c59658de3">   32</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ORANGE &quot;ORANGE&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#abf681265909adf3d3e8116c93c0ba179">   33</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define YELLOW &quot;YELLOW&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#acfbc006ea433ad708fdee3e82996e721">   34</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define GREEN &quot;GREEN&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#ad243f93c16bc4c1d3e0a13b84421d760">   35</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define CYAN &quot;CYAN&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#ae5f70677050eecd8909e0248e07b9e73">   36</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define GRAY &quot;GRAY&quot;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#aca56870f2285abae489635f0ee4d65e3">   37</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define DARK_GRAY &quot;DARK_GRAY&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a9663e02e20b5b578e6a31adae265cb88">   38</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define LIGHT_GRAY &quot;LIGHT_GRAY&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="code" href="graphviewer_8h.html#a6f699060902f800f12aaae150f3a708e">   39</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MAGENTA &quot;MAGENTA&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="code" href="class_graph_viewer.html">   45</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_graph_viewer.html">GraphViewer</a> {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="code" href="class_graph_viewer.html#a89d0abe75f41feededc49497cc514342">   50</a></span>&#160;  <span class="keyword">static</span> <span class="keywordtype">short</span> <a class="code" href="class_graph_viewer.html#a89d0abe75f41feededc49497cc514342">port</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="class_graph_viewer.html#aefca44052e0000ef416ddafc828f36cc">GraphViewer</a>(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">bool</span> port_n);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <a class="code" href="class_graph_viewer.html#aefca44052e0000ef416ddafc828f36cc">GraphViewer</a>(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">bool</span> dynamic, <span class="keywordtype">int</span> port_n);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_graph_viewer.html#a100cae24bcaff24a27b771b0e8b3fc51">importGraph</a>(<a class="code" href="class_graph.html">Graph&lt;int&gt;</a> graph);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#ae5247dc66449dcd21fc5d531bbbaddfa">createWindow</a>(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a85990c1eaac7feed3950960d4bd2fd4c">closeWindow</a>();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a5421e86ac76433876309236ba96e70a2">addNode</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a5421e86ac76433876309236ba96e70a2">addNode</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>); </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#aad0c1448c37f744209ffb671f1bd0015">addEdge</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> v1, <span class="keywordtype">int</span> v2, <span class="keywordtype">int</span> edgeType);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a0c418639bb911eb827cabf895915f775">removeNode</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a9a8ee68c7c12b373affbe4069dd95d72">removeEdge</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>); </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#ac25d7d007022fda16799808ba136e909">setVertexLabel</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">string</span> label);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a447cca0064e785654c2105602c2961ca">setEdgeLabel</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">string</span> label);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a07ccc96707efae4aa5f3ced3dca015af">setEdgeColor</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">string</span> color);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a8b542d7e09e81a45a74760c19233beb0">setVertexColor</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">string</span> color);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a4102580b69826ba83251ef7bb262f8be">defineEdgeColor</a>(<span class="keywordtype">string</span> color);</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a76de8676b7a93d72af514b84cdaa4d21">defineVertexColor</a>(<span class="keywordtype">string</span> color);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a07f598272fe3515455eab13be749604a">setEdgeThickness</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> thickness);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;  </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a02437b5fecd8b90de24436068312d593">setBackground</a>(<span class="keywordtype">string</span> path);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#ac211de009a0afe2e6d44f4f8d030a2cc">setEdgeWeight</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> weight);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a69eb065145063e4dea41961e92e35c8e">setEdgeFlow</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>, <span class="keywordtype">int</span> flow);</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_graph_viewer.html#a3009a66958686ccb7e78b68e37c3c423">rearrange</a>();</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="preprocessor">#ifdef linux</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="preprocessor"></span>  <span class="keyword">static</span> pid_t procId;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;  <span class="keywordtype">int</span> width, height;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;  <span class="keywordtype">bool</span> isDynamic;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;  <a class="code" href="class_connection.html">Connection</a> *con;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;  <span class="keywordtype">void</span> initialize(<span class="keywordtype">int</span>, <span class="keywordtype">int</span>, <span class="keywordtype">bool</span>, <span class="keywordtype">int</span>);</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;};</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="preprocessor">#endif</span></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Gerado em Sexta, 26 de Abril de 2013 12:03:21 para Sistema de Evacuação por &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.3.1
+</small></address>
+</body>
+</html>

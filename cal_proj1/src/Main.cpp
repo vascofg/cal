@@ -3,8 +3,13 @@
 #include "graphviewer.h"
 #include <algorithm>
 
-unsigned int vehicle_capacity; //capacity for all vehicles (to be defined by user)
 
+
+
+/**
+ * Capacidade dos veículos definida pelo utilizador
+ */
+unsigned int vehicle_capacity; 
 using namespace std;
 
 Graph<int> CreateTestGraph() {
@@ -48,7 +53,9 @@ GraphViewer* prepareGraphViewer(Graph<int>* graph) {
 	gv->rearrange();
 	return gv;
 }
-
+	/**
+	 * Encontra o trajecto mais curto entre o nó de origem e o de destino
+	 */	
 bool shortestPath(GraphViewer* gv, Graph<int>* graph, Vertex<int> **source,
 		Vertex<int> **dest, vector<int> *visited_edges, string edge_color,
 		int *dist = new int(), bool verbose = true) {
@@ -89,13 +96,20 @@ bool shortestPath(GraphViewer* gv, Graph<int>* graph, Vertex<int> **source,
 	return found;
 }
 
-//for use in getClosestVehicle
+
+	/**
+	 * Encontra o trajecto mais curto entre o nó de origem e o de destino, para uso em getClosestVehicle()
+	 */	
 bool shortestPath(Graph<int>* graph, Vertex<int> **source, Vertex<int> **dest,
 		int *dist) {
 	return shortestPath(NULL, graph, &(*source), &(*dest), NULL,
 			DEFAULT_EDGE_COLOR, &(*dist), false);
 }
 
+
+	/**
+	 * Encontra o veículo mais próximo das pessoas.
+	 */	
 Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		Vertex<int>* p, Vertex<int>* s = NULL) {
 	int sum, minsum = INT_MAX;
@@ -117,6 +131,9 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		return NULL;
 }
 
+	/**
+	 * Faz uma lista do nó mais próximo ao mais afastado.
+	 */	
 vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 		vector<Vertex<int> *> nodes, Vertex<int> *dest) {
 	int dist;
@@ -130,6 +147,9 @@ vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 	return nodes;
 }
 
+	/**
+	 * Acrescenta o número dado pelo utilizador de veículos ao grafo.
+	 */	
 bool addVehicles(Graph<int>* graph) {
 	vector<Vertex<int> *> vehicles;
 	Vertex<int> *current, *p;
@@ -190,6 +210,9 @@ void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes,
 	gv->rearrange();
 }
 
+	/**
+	 * Imprime detalhes das pessoas e dos veículos.
+	 */	
 void printStats(Graph<int>* graph) {
 	Vertex<int> *p = NULL, *s = NULL;
 	vector<Vertex<int> *> vehicles;
@@ -212,6 +235,9 @@ void printStats(Graph<int>* graph) {
 	}
 }
 
+	/**
+	 * Função principal encarregue de decidir qual veículo deve ajudar as pessoas até estas estarem por completo no abrigo.
+	 */	
 void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	cin.ignore(INT_MAX, '\n');
 	bool removedAll = false, found = true;
@@ -285,8 +311,7 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	populateNodes(graph, &p, &s, &vehicles); //repopulate nodes
 	setVertexVectorColor(gv, &vehicles, VEHICLE_COLOR); //reset vehicle colors
 	cout << "Todas as pessoas salvas." << endl;
-}
-
+}	
 void startUp(Graph<int> *graph) {
 	int opt;
 	bool exit = false;

@@ -51,23 +51,42 @@ public:
 	void setInfo(T info);
 
 	int getDist() const;
+	/**
+	 * @return: distância do nó às pessoas.
+	 */	
 	int getDistAux() const;
 	int getIndegree() const;
-
+	/**
+	 * Atribui a distâncido do nó às pessoas.
+	 * @param: distância do nó às pessoas.
+	 */	
 	void setDistAux(double dist);
 
 	bool operator<(const Vertex<T> vertex);
 
 	vector<Edge<T>  > getAdj();
-
+	/**
+	 * @return: veículo.
+	 */	
 	Vehicle* getVehicle();
-
+	/**
+	 * Acrescenta/Substitui veículo ao nó.
+	 * @param: veículo
+	 */
 	void addVehicle(Vehicle v);
-
+	/**
+	 * @return: pessoas no nó.
+	 */	
 	unsigned int getPeople();
-
+	/**
+	 * Acrescenta pessoas ao nó.
+	 * @param: número de pessoas.
+	 */
 	void addPeople(unsigned int p);
-
+	/**
+	 * Remove p pessoas do nó.
+	 * @param: número de pessoas.
+	 */
 	void removePeople(unsigned int p);
 
 	Vertex* path;
