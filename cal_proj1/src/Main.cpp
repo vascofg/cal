@@ -196,6 +196,13 @@ bool addVehicles(Graph<int>* graph) {
 	return true;
 }
 
+/**
+ * Adiciona os nós pessoas, abrigo e veículos às respectivas variáveis.
+ * @param Grafo.
+ * @param Referência para apontador do vértice de pessoas.
+ * @param Referência para apontador do vértice de abrigo.
+ * @param Referência para vector de vértices de veículos.
+ */
 bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
 		vector<Vertex<int> *>* vehicles) {
 	Vertex<int>* current;
