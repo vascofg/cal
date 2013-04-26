@@ -4,21 +4,21 @@
 #ifndef VEHICLE_H_
 #define VEHICLE_H_
 /**
- * Classe responsável por tratar de operações relacionados com o veículo.
+ * Classe responsÃ¡vel por tratar de operaÃ§Ãµes relacionados com o veÃ­culo.
  */
 class Vehicle {
 	unsigned int capacity;
 	unsigned int freeSeats;
 public:
 	/**
-	 * @return: Capacidade do veículo.
+	 * @return: Capacidade do veÃ­culo.
 	 */
 	unsigned int getCapacity(){
 		return capacity;
 	}
 	/**
-	 * @return: Número de pessoas que entraram no veículo.
-	 * @param: Número total de pessoas no nó.
+	 * @return: NÃºmero de pessoas que entraram no veÃ­culo.
+	 * @param: NÃºmero total de pessoas no nÃ³.
 	 */
 	unsigned int removeFreeSeats(unsigned int s)
 	{
@@ -34,30 +34,30 @@ public:
 		}
 	}
 	/**
-	 * Reinicializa o valor de lugares livres (igual à capacidade do veículo).
+	 * Reinicializa o valor de lugares livres (igual Ã  capacidade do veÃ­culo).
 	 */
 	void resetFreeSeats()
 	{
 		this->freeSeats=this->capacity;
 	}
 	/**
-	 * @return: Número de lugares livres.
+	 * @return: NÃºmero de lugares livres.
 	 */
 	unsigned int getFreeSeats()
 	{
 		return freeSeats;
 	}
 	/**
-	 * Constructor.
-	 * @param: Capacidade do veículo.
+	 * Construtor.
+	 * @param: Capacidade do veÃ­culo.
 	 */
 	Vehicle(unsigned int capacity) {
 		this->capacity = capacity;
 		this->freeSeats = capacity;
 	}
 	/**
-	 * Adds to the vehicle's capacity.
-	 * @param: Capacity to add.
+	 * Aumenta a capacidade do veÃ­culo.
+	 * @param: valor a adicionar.
 	 */
 	void addCapacity(int i){
 		this->capacity+=i;
