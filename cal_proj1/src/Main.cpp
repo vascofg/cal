@@ -12,6 +12,9 @@
 unsigned int vehicle_capacity;
 using namespace std;
 
+/**
+ * Função criadora de grafos, para efeito de testes.
+ */
 Graph<int> CreateTestGraph() {
 	Graph<int> myGraph = *new Graph<int>();
 
@@ -40,12 +43,20 @@ Graph<int> CreateTestGraph() {
 	return myGraph;
 }
 
+/**
+ * Adiciona veículos predefinidos ao grafo.
+ * @param: Grafo.
+ */
 void addDefaultVehicles(Graph<int> *graph) {
 	graph->getVertex(2)->addVehicle(Vehicle(vehicle_capacity));
 	graph->getVertex(4)->addVehicle(Vehicle(vehicle_capacity));
 	graph->getVertex(7)->addVehicle(Vehicle(vehicle_capacity));
 }
 
+/**
+ * Prepara a janela do GraphViewer.
+ * @param: Grafo.
+ */
 GraphViewer* prepareGraphViewer(Graph<int>* graph) {
 	GraphViewer *gv = new GraphViewer(600, 600, true);
 	gv->createWindow(600, 600);
@@ -53,8 +64,15 @@ GraphViewer* prepareGraphViewer(Graph<int>* graph) {
 	gv->rearrange();
 	return gv;
 }
+
 /**
  * Encontra o trajecto mais curto entre o nó de origem e o de destino
+ * @param: GraphViewer.
+ * @param: Grafo.
+ * @param: Vértice de origem.
+ * @param: Vértice de destino.
+ * @param: Arestas visitadas.
+ * @param: Cor da aresta.
  */
 bool shortestPath(GraphViewer* gv, Graph<int>* graph, Vertex<int> **source,
 		Vertex<int> **dest, vector<int> *visited_edges, string edge_color,
@@ -98,6 +116,10 @@ bool shortestPath(GraphViewer* gv, Graph<int>* graph, Vertex<int> **source,
 
 /**
  * Encontra o trajecto mais curto entre o nó de origem e o de destino, para uso em getClosestVehicle()
+ * @param: Grafo.
+ * @param: Vértice de origem.
+ * @param: Vértice de destino.
+ * @param: Distância.
  */
 bool shortestPath(Graph<int>* graph, Vertex<int> **source, Vertex<int> **dest,
 		int *dist) {
@@ -107,6 +129,10 @@ bool shortestPath(Graph<int>* graph, Vertex<int> **source, Vertex<int> **dest,
 
 /**
  * Encontra o veículo mais próximo das pessoas.
+ * @param: Grafo.
+ * @param: Vértice do veículo.
+ * @param: Vértice das pessoas.
+ * @param: Vértice do abrigo.
  */
 Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		Vertex<int>* p, Vertex<int>* s = NULL) {
@@ -131,6 +157,9 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 
 /**
  * Faz uma lista do nó mais próximo ao mais afastado.
+ * @param: Grafo.
+ * @param: Vértices.
+ * @param: Vértice de destino.
  */
 vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 		vector<Vertex<int> *> nodes, Vertex<int> *dest) {
@@ -147,6 +176,7 @@ vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 
 /**
  * Acrescenta o número dado pelo utilizador de veículos ao grafo.
+ * @param Grafo.
  */
 bool addVehicles(Graph<int>* graph) {
 	vector<Vertex<int> *> vehicles;
@@ -173,6 +203,7 @@ bool addVehicles(Graph<int>* graph) {
 	return true;
 }
 
+
 bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
 		vector<Vertex<int> *>* vehicles) {
 	Vertex<int>* current;
@@ -189,11 +220,19 @@ bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
 	return (*p != NULL && vehicles->size() > 0 && *s != NULL);
 }
 
+/**
+ * Pede ao utilizador para carregar numa tecla para continuar
+ */
 void promptContinue() {
 	cout << "Press enter to continue..." << endl;
 	cin.get();
 }
 
+/**
+ * Limpa as cores das arestas para a default.
+ * @param: GraphViewer.
+ * @param: Vector das arestas.
+ */
 void clearEdges(GraphViewer* gv, vector<int> *edges) {
 	for (unsigned int i = 0; i < edges->size(); i++)
 		gv->setEdgeColor((*edges)[i], DEFAULT_EDGE_COLOR);
@@ -201,6 +240,11 @@ void clearEdges(GraphViewer* gv, vector<int> *edges) {
 	edges->clear();
 }
 
+/**
+ * Define a cor do vértice.
+ * @param: GraphViewer.
+ * @param: Vector de vértices.
+ */
 void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes,
 		string color) {
 	for (unsigned int i = 0; i < nodes->size(); i++)
@@ -210,6 +254,7 @@ void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes,
 
 /**
  * Imprime detalhes das pessoas e dos veículos.
+ * @param: Grafo.
  */
 void printStats(Graph<int>* graph) {
 	Vertex<int> *p = NULL, *s = NULL;
@@ -235,6 +280,8 @@ void printStats(Graph<int>* graph) {
 
 /**
  * Função principal encarregue de decidir qual veículo deve ajudar as pessoas até estas estarem por completo no abrigo.
+ * @param: GraphViewer.
+ * @param: Grafo.
  */
 void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	cin.ignore(INT_MAX, '\n');
@@ -310,6 +357,11 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	setVertexVectorColor(gv, &vehicles, VEHICLE_COLOR); //reset vehicle colors
 	cout << "Todas as pessoas salvas." << endl;
 }
+
+/**
+ * Inicializa a interação com o utilizador
+ * @param: Grafo.
+ */
 void startUp(Graph<int> *graph) {
 	int opt;
 	bool exit = false;
@@ -343,6 +395,10 @@ void startUp(Graph<int> *graph) {
 	}
 }
 
+/**
+ * Guarda o grafo num ficheiro.
+ * @param: Grafo.
+ */
 void saveGraph(Graph<int>* graph) {
 	vector<Vertex<int> *> nodes = graph->getVertexSet();
 	ofstream ofs;
@@ -367,6 +423,10 @@ void saveGraph(Graph<int>* graph) {
 	ofs.close();
 }
 
+/**
+ * Carrega o grafo de um ficheiro.
+ * @param: Grafo.
+ */
 bool loadGraph(Graph<int>* graph) {
 	ifstream ifs;
 	string line;

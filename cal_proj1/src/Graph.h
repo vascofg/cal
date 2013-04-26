@@ -95,26 +95,41 @@ public:
 	bool isShelter;
 };
 
+/**
+ * Define a distância do vértice às pessoas
+ * @param: Distância.
+ */
 template <class T>
 void Vertex<T>::setDistAux(double dist){
 	this->distaux=dist;
 }
 
-
+/**
+ * @returns: pessoas.
+ */
 template <class T>
 unsigned int Vertex<T>::getPeople(){
 	return this->people;
 }
 
+/**
+ * Adiciona pessoas ao vértice.
+ * @param: número de pessoas a adicionar.
+ */
 template <class T>
 void Vertex<T>::addPeople(unsigned int p){
 	this->people+=p;
 };
 
+/**
+ * Remove pessoas do vértice
+ * @param: Remove pessoas do vértice.
+ */
 template <class T>
 void Vertex<T>::removePeople(unsigned int p){
 	this->people-=p;
 };
+
 
 template <class T>
 struct vertex_greater_than {
@@ -171,6 +186,10 @@ int Vertex<T>::getDist() const {
 	return this->dist;
 }
 
+
+/**
+ * @returns: Distância.
+ */
 template <class T>
 int Vertex<T>::getDistAux() const {
 	return this->distaux;
@@ -191,11 +210,20 @@ vector<Edge<T>  > Vertex<T>::getAdj(){
 	return this->adj;
 }
 
+
+/**
+ * Adiciona veículo ao vértice
+ * @param: veículo.
+ */
 template <class T>
 void Vertex<T>::addVehicle(Vehicle v){
 	this->vehicle=v;
 }
 
+
+/**
+ * @returns: veículo
+ */
 template <class T>
 Vehicle * Vertex<T>::getVehicle(){
 	return &this->vehicle;
