@@ -10,6 +10,7 @@ using namespace std;
 
 /**
  * Função criadora de grafos, para efeito de testes.
+ * @param: Grafo
  */
 void CreateTestGraph(Graph<int> *myGraph) {
 
@@ -49,6 +50,7 @@ void addDefaultVehicles(Graph<int> *graph) {
 /**
  * Prepara a janela do GraphViewer.
  * @param: Grafo.
+ * @return Retorna o graphviewer preparado para o grafo passado por parâmetro
  */
 GraphViewer* prepareGraphViewer(Graph<int>* graph) {
 	GraphViewer *gv = new GraphViewer(600, 600, true);
@@ -66,6 +68,7 @@ GraphViewer* prepareGraphViewer(Graph<int>* graph) {
  * @param: Vértice de destino.
  * @param: Arestas visitadas.
  * @param: Cor da aresta.
+ * @return: Retorna true caso encontre o caminho, false caso contrário
  */
 bool shortestPath(GraphViewer* gv, Graph<int>* graph, Vertex<int> **source,
 		Vertex<int> **dest, vector<int> *visited_edges, string edge_color,
@@ -113,6 +116,7 @@ bool shortestPath(GraphViewer* gv, Graph<int>* graph, Vertex<int> **source,
  * @param: Vértice de origem.
  * @param: Vértice de destino.
  * @param: Distância.
+ * @return: Retorna true caso encontre o caminho, false caso contrário
  */
 bool shortestPath(Graph<int>* graph, Vertex<int> **source, Vertex<int> **dest,
 		int *dist) {
@@ -153,6 +157,7 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
  * @param: Grafo.
  * @param: Vértices.
  * @param: Vértice de destino.
+ * @return: Retorna um vector com os nós por ordem de distância ao vértice de destino
  */
 vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 		vector<Vertex<int> *> nodes, Vertex<int> *dest) {
@@ -170,6 +175,7 @@ vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 /**
  * Acrescenta o número dado pelo utilizador de veículos ao grafo.
  * @param Grafo.
+ * @return: Retorna true se os veículos foram adicionados com sucesso
  */
 bool addVehicles(Graph<int>* graph) {
 	vector<Vertex<int> *> vehicles;
@@ -202,6 +208,7 @@ bool addVehicles(Graph<int>* graph) {
  * @param Referência para apontador do vértice de pessoas.
  * @param Referência para apontador do vértice de abrigo.
  * @param Referência para vector de vértices de veículos.
+ * @return Retorna true se o grafo estiver completo (nó de pessoas, abrigo e pelo menos um veículo)
  */
 bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
 		vector<Vertex<int> *>* vehicles) {
@@ -397,6 +404,7 @@ void startUp(Graph<int> *graph) {
 /**
  * Carrega o grafo de um ficheiro.
  * @param: Grafo.
+ * @return: Retorna true se o grafo for carregado com sucesso, false em caso contrário
  */
 bool loadGraph(Graph<int>* graph) {
 	ifstream ifs;
@@ -466,6 +474,7 @@ bool loadGraph(Graph<int>* graph) {
 /**
  * Guarda o grafo num ficheiro.
  * @param: Grafo.
+ * @return: Retorna true se o ficheiro for gravado com sucesso, false em caso contrário
  */
 bool saveGraph(Graph<int> *graph) {
 	vector<Vertex<int> *> nodes = graph->getVertexSet();
@@ -536,6 +545,9 @@ void addPeople(GraphViewer *gv, Graph<int> *graph) {
 		cout << "Nó inválido!" << endl;
 }
 
+/**
+ * Função main
+ */
 int main() {
 	Graph<int> *graphpointer = NULL;
 	Graph<int> graph = *new Graph<int>();
