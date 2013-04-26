@@ -1,27 +1,11 @@
 var searchData=
 [
-  ['getadj',['getAdj',['../class_vertex.html#a2041d7304d627508a34fb2630135caaa',1,'Vertex']]],
   ['getcapacity',['getCapacity',['../class_vehicle.html#a1352be642e74230224927fcca8f58a95',1,'Vehicle']]],
   ['getclosestnodes',['getClosestNodes',['../_main_8cpp.html#ab553aea85cf7eaa499dbeb845311ab9d',1,'Main.cpp']]],
   ['getclosestvehicle',['getClosestVehicle',['../_main_8cpp.html#aa76309ffd1dbcf9f1b44f01b90689fe2',1,'Main.cpp']]],
-  ['getdest',['getDest',['../class_edge.html#a75baa54b9c32895fbe813858ab8f27e2',1,'Edge']]],
-  ['getdist',['getDist',['../class_vertex.html#a3379c6cbcf1eaacc098381e3557a0b52',1,'Vertex']]],
   ['getdistaux',['getDistAux',['../class_vertex.html#a155a9be35f8c0f2fae1ce06fb0567d58',1,'Vertex']]],
-  ['getfloydwarshallpath',['getfloydWarshallPath',['../class_graph.html#ab23d1dae92a7f2b29dcb91a94336674c',1,'Graph']]],
-  ['getfloydwarshallpathaux',['getfloydWarshallPathAux',['../class_graph.html#aad1eda4beb8425d03ed1f3b8af397563',1,'Graph']]],
   ['getfreeseats',['getFreeSeats',['../class_vehicle.html#a9a0b05b89bffd1265e74d78c7e12e7e1',1,'Vehicle']]],
-  ['getid',['getId',['../class_edge.html#a306e608991ed7e79778fdb526b5e2c67',1,'Edge']]],
-  ['getindegree',['getIndegree',['../class_vertex.html#a305ef01582f945f22134abb9294fe1f3',1,'Vertex']]],
-  ['getinfo',['getInfo',['../class_vertex.html#a5880b4b252ae6818819c2f9645784b59',1,'Vertex']]],
-  ['getnumcycles',['getNumCycles',['../class_graph.html#a694dff81073c38b669057f0c6bd4cbb1',1,'Graph']]],
-  ['getnumvertex',['getNumVertex',['../class_graph.html#a295932f117d92c825a97ec458e0fb332',1,'Graph']]],
-  ['getpath',['getPath',['../class_graph.html#ab4054ca572c10669dd3e05d6d41c116c',1,'Graph']]],
   ['getpeople',['getPeople',['../class_vertex.html#a823ce5394351fedbe3a36c990446620a',1,'Vertex']]],
-  ['getsources',['getSources',['../class_graph.html#aa1a3c754f51a888e25dff2b26dfb85fc',1,'Graph']]],
   ['getvehicle',['getVehicle',['../class_vertex.html#adcbd1113126b35cd508ba8d7f9703927',1,'Vertex']]],
-  ['getvertex',['getVertex',['../class_graph.html#a08a95472b0d9bd7321660940807af060',1,'Graph']]],
-  ['getvertexset',['getVertexSet',['../class_graph.html#ab7dc5ec1c34df811d560021b726e95ec',1,'Graph']]],
-  ['getweight',['getWeight',['../class_edge.html#a5203c0721c87e9c035ad62c796a1725e',1,'Edge']]],
-  ['graph',['Graph',['../class_graph.html#a8c626ac04708ae490bba05e1e713cda2',1,'Graph']]],
   ['graphviewer',['GraphViewer',['../class_graph_viewer.html#aefca44052e0000ef416ddafc828f36cc',1,'GraphViewer::GraphViewer(int width, int height, bool port_n)'],['../class_graph_viewer.html#ad9d7b1d8b4ba8ef18517eae0e68568a2',1,'GraphViewer::GraphViewer(int width, int height, bool dynamic, int port_n)']]]
 ];
