@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <fstream>
 
+#define FILE_NAME "graph.txt"
+
 using namespace std;
 
 /**
@@ -193,7 +195,6 @@ bool addVehicles(Graph<int>* graph) {
 	}
 	return true;
 }
-
 
 bool populateNodes(Graph<int>* graph, Vertex<int> **p, Vertex<int> **s,
 		vector<Vertex<int> *>* vehicles) {
@@ -397,14 +398,14 @@ bool loadGraph(Graph<int>* graph) {
 	if (!ifs.is_open())
 		return false;
 	getline(ifs, line); //vehicle capacity
-	if(line=="")
+	if (line == "")
 		return false;
 	graph->vehicle_capacity = atoi(line.c_str());
 	getline(ifs, line); //blank line
-	if(line!="")
+	if (line != "")
 		return false;
 	getline(ifs, line); //first vertex
-	if(line=="")
+	if (line == "")
 		return false;
 	while (line != "") {
 		size_t current = 0;
@@ -447,10 +448,10 @@ bool loadGraph(Graph<int>* graph) {
 		current = next + 1;
 		next = line.find_first_of(" ", current);
 		int weight = atoi(line.substr(current, next).c_str());
-		graph->addEdge(source,dest,weight,eid);
+		graph->addEdge(source, dest, weight, eid);
 		getline(ifs, line);
 	}
-	if(eid!=0)
+	if (eid != 0)
 		graph->numEdge = eid; //set numedge to the last edge on file
 	return true;
 }
@@ -459,15 +460,14 @@ bool loadGraph(Graph<int>* graph) {
  * Guarda o grafo num ficheiro.
  * @param: Grafo.
  */
-bool saveGraph (Graph<int> *graph)
-{
+bool saveGraph(Graph<int> *graph) {
 	vector<Vertex<int> *> nodes = graph->getVertexSet();
 	ofstream ofs;
 	ofs.open(FILE_NAME, ios::out | ios::trunc);
-	if(!ofs.is_open())
+	if (!ofs.is_open())
 		return false;
 	ofs << graph->vehicle_capacity << endl << endl;
-	for (int i = 0; i < nodes.size(); i++) {
+	for (unsigned int i = 0; i < nodes.size(); i++) {
 		ofs << nodes[i]->getInfo();
 		if (nodes[i]->getPeople() > 0)
 			ofs << " p " << nodes[i]->getPeople();
@@ -478,8 +478,8 @@ bool saveGraph (Graph<int> *graph)
 		ofs << endl;
 	}
 	ofs << endl;
-	for (int i = 0; i < nodes.size(); i++)
-		for (int j = 0; j < nodes[i]->getAdj().size(); j++)
+	for (unsigned int i = 0; i < nodes.size(); i++)
+		for (unsigned int j = 0; j < nodes[i]->getAdj().size(); j++)
 			ofs << nodes[i]->getAdj()[j].getId() << " " << nodes[i]->getInfo()
 					<< " " << nodes[i]->getAdj()[j].getDest()->getInfo() << " "
 					<< nodes[i]->getAdj()[j].getWeight() << endl;
@@ -487,25 +487,64 @@ bool saveGraph (Graph<int> *graph)
 	return true;
 }
 
+/**
+ * Adiciona pessoas ao grafo. Se for seleccionado o nó atual, incrementa o num de pessoas no nó.
+ * Se não remove as pessoas do nó atual e adiciona ao nó seleccionado
+ * @param: GraphViewer.
+ * @param: Grafo.
+ */
+void addPeople(GraphViewer *gv, Graph<int> *graph) {
+	Vertex<int> *vertex, *current;
+	int n;
+	cout << "Nó: ";
+	cin >> n;
+	vertex = graph->getVertex(n);
+	if (vertex != NULL && vertex->getVehicle()->getCapacity() == 0
+			&& !vertex->isShelter) {
+		cout << "Número de pessoas: ";
+		cin >> n;
+		if (n > 0) {
+			if (vertex->getPeople() > 0) //if chosen vertex is the current one, increment to the value
+				vertex->addPeople(n);
+			else { //else, remove current people location and add people to the selected node
+				for (int i = 0; i < graph->getNumVertex(); i++) { //populate nodes
+					current = graph->getVertexSet()[i];
+					if (current->getPeople() > 0) {
+						current->removePeople(current->getPeople()); //remove current people location
+						gv->setVertexColor(current->getInfo(),
+								DEFAULT_VERTEX_COLOR);
+						break;
+					}
+				}
+			}
+
+			vertex->addPeople(n);
+			gv->setVertexColor(vertex->getInfo(), PEOPLE_COLOR);
+			gv->rearrange();
+		}
+		else
+			cout << "Número de pessoas inválido" << endl;
+	}
+	else
+		cout << "Nó inválido!" << endl;
+}
+
 int main() {
 	Graph<int> *graphpointer = NULL;
 	Graph<int> graph = *new Graph<int>();
 	string opt_load;
 	bool loaded = false;
-	if (loadGraph(&graph))
-	{
+	if (loadGraph(&graph)) {
 		cout << "Carregar do ficheiro(s/n): ";
 		cin >> opt_load;
-		if(opt_load=="s" || opt_load=="S")
-		{
-			graphpointer=&graph;
+		if (opt_load == "s" || opt_load == "S") {
+			graphpointer = &graph;
 			cout << "Grafo carregado do ficheiro" << endl;
-			loaded=true;
-		}
-		else
+			loaded = true;
+		} else
 			graph = *new Graph<int>();
 	}
-	if(!loaded) {
+	if (!loaded) {
 		CreateTestGraph(&graph);
 		graphpointer = &graph;
 		startUp(graphpointer);
@@ -514,7 +553,7 @@ int main() {
 	GraphViewer *gv = prepareGraphViewer(graphpointer);
 	while (true) { //Main menu option
 		cout
-				<< "Sistema de evacuação\n1-Abrir nova janela\n2-Salvar pessoas\n3-Estatísticas do grafo\n0-Sair\nOpção:";
+				<< "Sistema de evacuação\n1-Abrir nova janela\n2-Salvar pessoas\n3-Estatísticas do grafo\n4-Adicionar pessoas\n0-Sair\nOpção:";
 		cin >> opt;
 		switch (opt) {
 		case 1:
@@ -528,6 +567,9 @@ int main() {
 			printStats(graphpointer);
 			break;
 		}
+		case 4:
+			addPeople(gv, graphpointer);
+			break;
 		case 0:
 			saveGraph(graphpointer);
 			return 0;

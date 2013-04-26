@@ -4,8 +4,6 @@
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
-#define FILE_NAME "graph.txt"
-
 #include <vector>
 #include <queue>
 #include <list>
