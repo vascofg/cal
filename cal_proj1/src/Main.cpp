@@ -2,14 +2,14 @@
 #include "Vehicle.h"
 #include "graphviewer.h"
 #include <algorithm>
+#include <fstream>
 
-
-
+#define FILE_NAME "graph.txt"
 
 /**
  * Capacidade dos veículos definida pelo utilizador
  */
-unsigned int vehicle_capacity; 
+unsigned int vehicle_capacity;
 using namespace std;
 
 Graph<int> CreateTestGraph() {
@@ -53,9 +53,9 @@ GraphViewer* prepareGraphViewer(Graph<int>* graph) {
 	gv->rearrange();
 	return gv;
 }
-	/**
-	 * Encontra o trajecto mais curto entre o nó de origem e o de destino
-	 */	
+/**
+ * Encontra o trajecto mais curto entre o nó de origem e o de destino
+ */
 bool shortestPath(GraphViewer* gv, Graph<int>* graph, Vertex<int> **source,
 		Vertex<int> **dest, vector<int> *visited_edges, string edge_color,
 		int *dist = new int(), bool verbose = true) {
@@ -96,20 +96,18 @@ bool shortestPath(GraphViewer* gv, Graph<int>* graph, Vertex<int> **source,
 	return found;
 }
 
-
-	/**
-	 * Encontra o trajecto mais curto entre o nó de origem e o de destino, para uso em getClosestVehicle()
-	 */	
+/**
+ * Encontra o trajecto mais curto entre o nó de origem e o de destino, para uso em getClosestVehicle()
+ */
 bool shortestPath(Graph<int>* graph, Vertex<int> **source, Vertex<int> **dest,
 		int *dist) {
 	return shortestPath(NULL, graph, &(*source), &(*dest), NULL,
 			DEFAULT_EDGE_COLOR, &(*dist), false);
 }
 
-
-	/**
-	 * Encontra o veículo mais próximo das pessoas.
-	 */	
+/**
+ * Encontra o veículo mais próximo das pessoas.
+ */
 Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		Vertex<int>* p, Vertex<int>* s = NULL) {
 	int sum, minsum = INT_MAX;
@@ -131,9 +129,9 @@ Vertex<int>* getClosestVehicle(Graph<int>* graph, vector<Vertex<int> *> v,
 		return NULL;
 }
 
-	/**
-	 * Faz uma lista do nó mais próximo ao mais afastado.
-	 */	
+/**
+ * Faz uma lista do nó mais próximo ao mais afastado.
+ */
 vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 		vector<Vertex<int> *> nodes, Vertex<int> *dest) {
 	int dist;
@@ -147,9 +145,9 @@ vector<Vertex<int> *> getClosestNodes(Graph<int>* graph,
 	return nodes;
 }
 
-	/**
-	 * Acrescenta o número dado pelo utilizador de veículos ao grafo.
-	 */	
+/**
+ * Acrescenta o número dado pelo utilizador de veículos ao grafo.
+ */
 bool addVehicles(Graph<int>* graph) {
 	vector<Vertex<int> *> vehicles;
 	Vertex<int> *current, *p;
@@ -210,9 +208,9 @@ void setVertexVectorColor(GraphViewer* gv, vector<Vertex<int> *> *nodes,
 	gv->rearrange();
 }
 
-	/**
-	 * Imprime detalhes das pessoas e dos veículos.
-	 */	
+/**
+ * Imprime detalhes das pessoas e dos veículos.
+ */
 void printStats(Graph<int>* graph) {
 	Vertex<int> *p = NULL, *s = NULL;
 	vector<Vertex<int> *> vehicles;
@@ -235,9 +233,9 @@ void printStats(Graph<int>* graph) {
 	}
 }
 
-	/**
-	 * Função principal encarregue de decidir qual veículo deve ajudar as pessoas até estas estarem por completo no abrigo.
-	 */	
+/**
+ * Função principal encarregue de decidir qual veículo deve ajudar as pessoas até estas estarem por completo no abrigo.
+ */
 void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	cin.ignore(INT_MAX, '\n');
 	bool removedAll = false, found = true;
@@ -311,7 +309,7 @@ void savePeople(GraphViewer* gv, Graph<int>* graph) {
 	populateNodes(graph, &p, &s, &vehicles); //repopulate nodes
 	setVertexVectorColor(gv, &vehicles, VEHICLE_COLOR); //reset vehicle colors
 	cout << "Todas as pessoas salvas." << endl;
-}	
+}
 void startUp(Graph<int> *graph) {
 	int opt;
 	bool exit = false;
@@ -345,10 +343,105 @@ void startUp(Graph<int> *graph) {
 	}
 }
 
+void saveGraph(Graph<int>* graph) {
+	vector<Vertex<int> *> nodes = graph->getVertexSet();
+	ofstream ofs;
+	ofs.open(FILE_NAME, ios::out | ios::trunc);
+	ofs << vehicle_capacity << endl << endl;
+	for (int i = 0; i < nodes.size(); i++) {
+		ofs << nodes[i]->getInfo();
+		if (nodes[i]->getPeople() > 0)
+			ofs << " p " << nodes[i]->getPeople();
+		else if (nodes[i]->getVehicle()->getCapacity() > 0)
+			ofs << " v " << nodes[i]->getVehicle()->getCapacity();
+		else if (nodes[i]->isShelter)
+			ofs << " s";
+		ofs << endl;
+	}
+	ofs << endl;
+	for (int i = 0; i < nodes.size(); i++)
+		for (int j = 0; j < nodes[i]->getAdj().size(); j++)
+			ofs << nodes[i]->getAdj()[j].getId() << " " << nodes[i]->getInfo()
+					<< " " << nodes[i]->getAdj()[j].getDest()->getInfo() << " "
+					<< nodes[i]->getAdj()[j].getWeight() << endl;
+	ofs.close();
+}
+
+bool loadGraph(Graph<int>* graph) {
+	ifstream ifs;
+	string line;
+	ifs.open(FILE_NAME, ios::in);
+	if (!ifs.is_open())
+		return false;
+	getline(ifs, line); //vehicle capacity
+	if(line=="")
+		return false;
+	vehicle_capacity = atoi(line.c_str());
+	getline(ifs, line); //blank line
+	if(line!="")
+		return false;
+	getline(ifs, line); //first vertex
+	if(line=="")
+		return false;
+	while (line != "") {
+		size_t current = 0;
+		size_t next = -1;
+		next = line.find_first_of(" ", current);
+		int vid = atoi(line.substr(current, next).c_str());
+		graph->addVertex(vid);
+		Vertex<int> *v = graph->getVertex(vid);
+		if (next != string::npos) {
+			current = next + 1;
+			next = line.find_first_of(" ", current);
+			char ntype = line.substr(current, next)[0];
+			if (ntype == 's')
+				v->isShelter = true;
+			else if (next != string::npos) {
+				current = next + 1;
+				next = line.find_first_of(" ", current);
+				unsigned int val = atoi(line.substr(current, next).c_str());
+				if (ntype == 'v')
+					v->addVehicle(Vehicle(val));
+				else if (ntype == 'p')
+					v->addPeople(val);
+			}
+		}
+		getline(ifs, line);
+	}
+	getline(ifs, line); //first edge
+	int eid = 0;
+	while (line != "") {
+		size_t current = 0;
+		size_t next = -1;
+		next = line.find_first_of(" ", current);
+		eid = atoi(line.substr(current, next).c_str());
+		current = next + 1;
+		next = line.find_first_of(" ", current);
+		int source = atoi(line.substr(current, next).c_str());
+		current = next + 1;
+		next = line.find_first_of(" ", current);
+		int dest = atoi(line.substr(current, next).c_str());
+		current = next + 1;
+		next = line.find_first_of(" ", current);
+		int weight = atoi(line.substr(current, next).c_str());
+		graph->addEdge(source,dest,weight,eid);
+		getline(ifs, line);
+	}
+	if(eid!=0)
+		graph->numEdge = eid; //set numedge to the last edge on file
+	return true;
+}
+
 int main() {
-	Graph<int> graph = CreateTestGraph();
+	//Graph<int> graph = CreateTestGraph();
+	Graph<int> graph = *new Graph<int>();
+	if (loadGraph(&graph))
+		cout << "Grafo carregado do ficheiro" << endl;
+	else {
+		graph = CreateTestGraph();
+		startUp(&graph);
+	}
 	int opt;
-	startUp(&graph);
 	GraphViewer *gv = prepareGraphViewer(&graph);
 	while (true) { //Main menu option
 		cout
@@ -359,7 +452,6 @@ int main() {
 			gv = prepareGraphViewer(&graph);
 			break;
 		case 2: {
-
 			savePeople(gv, &graph);
 			break;
 		}
@@ -368,6 +460,7 @@ int main() {
 			break;
 		}
 		case 0:
+			saveGraph(&graph);
 			return 0;
 		default:
 			cout << "Opção inválida!" << endl;
