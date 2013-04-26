@@ -4,46 +4,37 @@
 #include <algorithm>
 #include <fstream>
 
-#define FILE_NAME "graph.txt"
-
-/**
- * Capacidade dos veículos definida pelo utilizador
- */
-unsigned int vehicle_capacity;
 using namespace std;
 
-Graph<int> CreateTestGraph() {
-	Graph<int> myGraph = *new Graph<int>();
+void CreateTestGraph(Graph<int> *myGraph) {
 
 	for (int i = 1; i < 8; i++) {
-		myGraph.addVertex(i);
+		myGraph->addVertex(i);
 	}
 
-	myGraph.getVertex(3)->addPeople(35);
+	myGraph->getVertex(3)->addPeople(35);
 
-	myGraph.getVertex(5)->isShelter = true;
+	myGraph->getVertex(5)->isShelter = true;
 
-	myGraph.addEdge(1, 2, 2);
-	myGraph.addEdge(1, 4, 7);
-	myGraph.addEdge(2, 4, 3);
-	myGraph.addEdge(2, 5, 5);
-	myGraph.addEdge(3, 1, 2);
-	myGraph.addEdge(3, 6, 5);
-	myGraph.addEdge(4, 3, 1);
-	myGraph.addEdge(4, 5, 1);
-	myGraph.addEdge(4, 6, 6);
-	myGraph.addEdge(4, 7, 4);
-	myGraph.addEdge(5, 7, 2);
-	myGraph.addEdge(6, 4, 3);
-	myGraph.addEdge(7, 6, 4);
-
-	return myGraph;
+	myGraph->addEdge(1, 2, 2);
+	myGraph->addEdge(1, 4, 7);
+	myGraph->addEdge(2, 4, 3);
+	myGraph->addEdge(2, 5, 5);
+	myGraph->addEdge(3, 1, 2);
+	myGraph->addEdge(3, 6, 5);
+	myGraph->addEdge(4, 3, 1);
+	myGraph->addEdge(4, 5, 1);
+	myGraph->addEdge(4, 6, 6);
+	myGraph->addEdge(4, 7, 4);
+	myGraph->addEdge(5, 7, 2);
+	myGraph->addEdge(6, 4, 3);
+	myGraph->addEdge(7, 6, 4);
 }
 
 void addDefaultVehicles(Graph<int> *graph) {
-	graph->getVertex(2)->addVehicle(Vehicle(vehicle_capacity));
-	graph->getVertex(4)->addVehicle(Vehicle(vehicle_capacity));
-	graph->getVertex(7)->addVehicle(Vehicle(vehicle_capacity));
+	graph->getVertex(2)->addVehicle(Vehicle(graph->vehicle_capacity));
+	graph->getVertex(4)->addVehicle(Vehicle(graph->vehicle_capacity));
+	graph->getVertex(7)->addVehicle(Vehicle(graph->vehicle_capacity));
 }
 
 GraphViewer* prepareGraphViewer(Graph<int>* graph) {
@@ -168,7 +159,7 @@ bool addVehicles(Graph<int>* graph) {
 	}
 	for (unsigned int i = 0; i < nvehicles; i++) {
 		graph->getVertex(vehicles[i]->getInfo())->addVehicle(
-				Vehicle(vehicle_capacity));
+				Vehicle(graph->vehicle_capacity));
 	}
 	return true;
 }
@@ -228,7 +219,7 @@ void printStats(Graph<int>* graph) {
 			cout << "Os veículos estão localizados nos nós ";
 		for (unsigned int i = 0; i < vehicles.size(); i++)
 			cout << vehicles[i]->getInfo() << ", ";
-		cout << "com capacidade para " << vehicle_capacity << " pessoas"
+		cout << "com capacidade para " << graph->vehicle_capacity << " pessoas"
 				<< endl;
 	}
 }
@@ -318,7 +309,7 @@ void startUp(Graph<int> *graph) {
 		cin >> opt;
 		cin.ignore(INT_MAX, '\n');
 		if (opt > 0) {
-			vehicle_capacity = opt;
+			graph->vehicle_capacity = opt;
 			exit = true;
 		}
 	}
@@ -343,30 +334,9 @@ void startUp(Graph<int> *graph) {
 	}
 }
 
-void saveGraph(Graph<int>* graph) {
-	vector<Vertex<int> *> nodes = graph->getVertexSet();
-	ofstream ofs;
-	ofs.open(FILE_NAME, ios::out | ios::trunc);
-	ofs << vehicle_capacity << endl << endl;
-	for (int i = 0; i < nodes.size(); i++) {
-		ofs << nodes[i]->getInfo();
-		if (nodes[i]->getPeople() > 0)
-			ofs << " p " << nodes[i]->getPeople();
-		else if (nodes[i]->getVehicle()->getCapacity() > 0)
-			ofs << " v " << nodes[i]->getVehicle()->getCapacity();
-		else if (nodes[i]->isShelter)
-			ofs << " s";
-		ofs << endl;
-	}
-	ofs << endl;
-	for (int i = 0; i < nodes.size(); i++)
-		for (int j = 0; j < nodes[i]->getAdj().size(); j++)
-			ofs << nodes[i]->getAdj()[j].getId() << " " << nodes[i]->getInfo()
-					<< " " << nodes[i]->getAdj()[j].getDest()->getInfo() << " "
-					<< nodes[i]->getAdj()[j].getWeight() << endl;
-	ofs.close();
-}
-
+/**
+ * Carrega o grafo do ficheiro
+ */
 bool loadGraph(Graph<int>* graph) {
 	ifstream ifs;
 	string line;
@@ -376,7 +346,7 @@ bool loadGraph(Graph<int>* graph) {
 	getline(ifs, line); //vehicle capacity
 	if(line=="")
 		return false;
-	vehicle_capacity = atoi(line.c_str());
+	graph->vehicle_capacity = atoi(line.c_str());
 	getline(ifs, line); //blank line
 	if(line!="")
 		return false;
@@ -432,35 +402,77 @@ bool loadGraph(Graph<int>* graph) {
 	return true;
 }
 
+bool saveGraph (Graph<int> *graph)
+{
+	vector<Vertex<int> *> nodes = graph->getVertexSet();
+	ofstream ofs;
+	ofs.open(FILE_NAME, ios::out | ios::trunc);
+	if(!ofs.is_open())
+		return false;
+	ofs << graph->vehicle_capacity << endl << endl;
+	for (int i = 0; i < nodes.size(); i++) {
+		ofs << nodes[i]->getInfo();
+		if (nodes[i]->getPeople() > 0)
+			ofs << " p " << nodes[i]->getPeople();
+		else if (nodes[i]->getVehicle()->getCapacity() > 0)
+			ofs << " v " << nodes[i]->getVehicle()->getCapacity();
+		else if (nodes[i]->isShelter)
+			ofs << " s";
+		ofs << endl;
+	}
+	ofs << endl;
+	for (int i = 0; i < nodes.size(); i++)
+		for (int j = 0; j < nodes[i]->getAdj().size(); j++)
+			ofs << nodes[i]->getAdj()[j].getId() << " " << nodes[i]->getInfo()
+					<< " " << nodes[i]->getAdj()[j].getDest()->getInfo() << " "
+					<< nodes[i]->getAdj()[j].getWeight() << endl;
+	ofs.close();
+	return true;
+}
+
 int main() {
-	//Graph<int> graph = CreateTestGraph();
+	Graph<int> *graphpointer = NULL;
 	Graph<int> graph = *new Graph<int>();
+	string opt_load;
+	bool loaded = false;
 	if (loadGraph(&graph))
-		cout << "Grafo carregado do ficheiro" << endl;
-	else {
-		graph = CreateTestGraph();
-		startUp(&graph);
+	{
+		cout << "Carregar do ficheiro(s/n): ";
+		cin >> opt_load;
+		if(opt_load=="s" || opt_load=="S")
+		{
+			graphpointer=&graph;
+			cout << "Grafo carregado do ficheiro" << endl;
+			loaded=true;
+		}
+		else
+			graph = *new Graph<int>();
+	}
+	if(!loaded) {
+		CreateTestGraph(&graph);
+		graphpointer = &graph;
+		startUp(graphpointer);
 	}
 	int opt;
-	GraphViewer *gv = prepareGraphViewer(&graph);
+	GraphViewer *gv = prepareGraphViewer(graphpointer);
 	while (true) { //Main menu option
 		cout
 				<< "Sistema de evacuação\n1-Abrir nova janela\n2-Salvar pessoas\n3-Estatísticas do grafo\n0-Sair\nOpção:";
 		cin >> opt;
 		switch (opt) {
 		case 1:
-			gv = prepareGraphViewer(&graph);
+			gv = prepareGraphViewer(graphpointer);
 			break;
 		case 2: {
-			savePeople(gv, &graph);
+			savePeople(gv, graphpointer);
 			break;
 		}
 		case 3: {
-			printStats(&graph);
+			printStats(graphpointer);
 			break;
 		}
 		case 0:
-			saveGraph(&graph);
+			saveGraph(graphpointer);
 			return 0;
 		default:
 			cout << "Opção inválida!" << endl;

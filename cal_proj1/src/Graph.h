@@ -4,6 +4,8 @@
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
+#define FILE_NAME "graph.txt"
+
 #include <vector>
 #include <queue>
 #include <list>
@@ -12,6 +14,7 @@
 #include "ide_listener.h"
 #include "Vehicle.h"
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -53,13 +56,13 @@ public:
 	int getDist() const;
 	/**
 	 * @return: distância do nó às pessoas.
-	 */	
+	 */
 	int getDistAux() const;
 	int getIndegree() const;
 	/**
 	 * Atribui a distâncido do nó às pessoas.
 	 * @param: distância do nó às pessoas.
-	 */	
+	 */
 	void setDistAux(double dist);
 
 	bool operator<(const Vertex<T> vertex);
@@ -67,7 +70,7 @@ public:
 	vector<Edge<T>  > getAdj();
 	/**
 	 * @return: veículo.
-	 */	
+	 */
 	Vehicle* getVehicle();
 	/**
 	 * Acrescenta/Substitui veículo ao nó.
@@ -76,7 +79,7 @@ public:
 	void addVehicle(Vehicle v);
 	/**
 	 * @return: pessoas no nó.
-	 */	
+	 */
 	unsigned int getPeople();
 	/**
 	 * Acrescenta pessoas ao nó.
@@ -289,6 +292,8 @@ public:
 	void getfloydWarshallPathAux(int index1, int index2, vector<T> & res);
 
 	int numEdge; //unique num edge identifier, to identify edges on graphviewer
+
+	unsigned int vehicle_capacity;	//Capacidade dos veículos definida pelo utilizador
 };
 
 
@@ -833,6 +838,5 @@ void Graph<T>::floydWarshallShortestPath() {
 			}
 
 }
-
 
 #endif /* GRAPH_H_ */
