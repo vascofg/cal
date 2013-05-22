@@ -31,7 +31,7 @@ int main() {
 				tmp_sorted = tmp;
 				sort(tmp_sorted.begin(), tmp_sorted.end());
 				dist_sorted = edit_distance(tmp_sorted, original_sorted);
-				if (dist_sorted == 1) {
+				if (dist_sorted == 1 || (dist_sorted == 0 && dist != 0)) {
 					sim = similarity(tmp_size, dist);
 					add_anagram(&anag_list, tmp, dist, sim);
 				}
