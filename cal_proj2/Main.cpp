@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <algorithm>    // std::sort
 using namespace std;
 
 unsigned int edit_distance(string s1, string s2);
@@ -22,21 +23,41 @@ int main()
 	size=original.size();
 	cout << size << endl;
 	vector<string> v;
+
+	int dist2;
+	string originalsorted = original;
+	sort(originalsorted.begin(),originalsorted.end());
+	string tmpsorted;
 	while ( is.good() )
 	{
 		getline(is,tmp);
 		tmpsize=tmp.size();
 		if(tmpsize==size || tmpsize==size+1)
 		{
-			v.push_back(tmp);
+
 			sim=GetSimilarity(tmp,original);
 			dist=edit_distance(tmp,original);
-			cout << tmp << " | sim:" << sim << " | dist: " << dist << endl;
+			//cout << tmp << " | sim:" << sim << " | dist: " << dist << endl;
+			tmpsorted=tmp;
+			sort(tmpsorted.begin(),tmpsorted.end());
+			//cout << "sorted " << tmpsorted << "|" << originalsorted << endl;
+			dist2=edit_distance(tmpsorted,originalsorted);
+
+			//Ordena ambas as strings
+			//vê a distancia de edição entre elas[(original,palavra) e (original_ordenada,palavra_ordenada)]
+			//Encontra-se dentro dos parâmetros se a distancia da original e palavra for 0 ou 1, ou então quando ordenadas a distância é 0
+			//É capaz é de não ser muito eficiente porque calcula distancia, ordena e volta a calcular distancia.
+			if(dist==0	|| dist2==1 || dist==1)
+
+		//	cout << ":" << tmp << endl;
+		 	v.push_back(tmp);
+
 		}
 	}
 	/*for(int i=0;i<v.size();i++)
 		cout << v[i] << endl;*/
 	cout << "Encontradas " << v.size() << " palavras possíveis. Boa sorte." << endl;
+	cin >> tmp;
 }
 
 float GetSimilarity(string string1, string string2)
