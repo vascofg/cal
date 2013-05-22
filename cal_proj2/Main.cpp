@@ -45,7 +45,7 @@ int main()
 
 			//Ordena ambas as strings
 			//vê a distancia de edição entre elas[(original,palavra) e (original_ordenada,palavra_ordenada)]
-			//Encontra-se dentro dos parâmetros se a distancia da original e palavra for 0 ou 1, ou então quando ordenadas a distância é 0
+			//Encontra-se dentro dos parâmetros do pdf se a distancia de edição da original à palavra for 0 ou 1, ou então quando ordenadas a distância é 1
 			//É capaz é de não ser muito eficiente porque calcula distancia, ordena e volta a calcular distancia.
 			if(dist==0	|| dist2==1 || dist==1)
 
