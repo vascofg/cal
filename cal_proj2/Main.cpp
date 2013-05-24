@@ -1,5 +1,17 @@
 #include "Main.h"
 
+
+/**
+ * EXPLICAÇÃO DA IMPLEMENTAÇÃO
+ * Perante a palavra original, o programa vai ao dicionário à procura de palavras anagramas.
+ * Para tal, ele inicialmente verifica se o tamanho da palavra a analisar é de tamanho igual ou maior por uma unidade (caso da adição de uma letra) à original.
+ * Se tal se verificar, calcula a distância de edição entre ela e a original. Se a distância de edição for apenas de 1 unidade, significa que é anagrama. No entanto
+ * é ainda possível ser anagrama. Para tal, ordena-se quer a palavra original, quer a palavra a analisar, e calculam-se de novo as distâncias de edição. 
+ * Desta forma, se a distância de edição das palavras for de 1 ou 0 significa que a palavra é anagrama e acrescenta-se ao vector com a sua distância de
+ * edição (original, não a ordenada). No final ordena-se o vector pela distância de edições.
+ */
+
+
 int main() {
 	int dist, dist_sorted;
 	int original_size, tmp_size;
@@ -12,6 +24,7 @@ int main() {
 	dic.open("words.txt");
 	cout << "Palavra: ";
 	cin >> original;
+	cout << "Palavra | Distância de Edição | Similaridade\n" << endl;
 
 	original_size = original.size();
 	original_sorted = original;
